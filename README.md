@@ -19,6 +19,7 @@ Next.js – Frontend moderno e performático
 MongoDB – Banco de dados NoSQL
 Defy – Plataforma de IA para análise e sugestão de tratativas
 Freshdesk – Origem dos chamados técnicos
+
 📦 Estrutura do Projeto
 knobot/
 ├── pages/              # Páginas da aplicação Next.js
@@ -27,6 +28,7 @@ knobot/
 ├── utils/              # Funções auxiliares
 ├── public/             # Arquivos estáticos
 └── README.md           # Este arquivo
+
 📈 Como Funciona
 O usuário acessa a página do Knobot.
 Um chamado é enviado ou selecionado.
