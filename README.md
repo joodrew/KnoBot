@@ -24,7 +24,7 @@ Freshdesk – Origem dos chamados técnicos
 
 ```
 knobot/
-├── pages/              # Páginas da aplicação Next.js
+├── app/              # Páginas da aplicação Next.js
 ├── components/         # Componentes reutilizáveis da interface
 ├── services/           # Integrações com Defy e MongoDB
 ├── utils/              # Funções auxiliares
