@@ -21,6 +21,8 @@ Defy – Plataforma de IA para análise e sugestão de tratativas
 Freshdesk – Origem dos chamados técnicos
 
 📦 Estrutura do Projeto
+
+```
 knobot/
 ├── pages/              # Páginas da aplicação Next.js
 ├── components/         # Componentes reutilizáveis da interface
@@ -28,6 +30,7 @@ knobot/
 ├── utils/              # Funções auxiliares
 ├── public/             # Arquivos estáticos
 └── README.md           # Este arquivo
+```
 
 📈 Como Funciona
 O usuário acessa a página do Knobot.
