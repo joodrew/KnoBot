@@ -1,0 +1,10 @@
+{
+    "crons": {
+        "jobs": [
+            {
+                "path": "/api/sync-freshdesk",
+                "schedule": "0 * * * *"
+            }
+        ]
+    }
+}
