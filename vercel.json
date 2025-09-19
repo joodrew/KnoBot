@@ -1,0 +1,15 @@
+{
+    "cron": {
+        "jobs": [
+            {
+                "path": "/api/sync-freshdesk",
+                "schedule": "0 * * * *"
+            }
+            // Esta versao do cron pula para o proximo chamado se o colection status.id ja existir no mongoDB (nao atualiza status de chamado)
+            // {
+            //   "path": "/api/sync-freshdesk?validateStatus=false",
+            //   "schedule": "0 * * * *"
+            // }
+        ]
+    }
+}
