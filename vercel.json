@@ -1,6 +1,6 @@
 {
-    "crons": {
+    "crons": [{
                 "path": "/api/sync-freshdesk",
                 "schedule": "0 * * * *"
-            }
+            }]
     }
