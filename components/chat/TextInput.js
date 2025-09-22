@@ -1,10 +1,15 @@
 'use client';
 
+import { useState } from 'react';
+import { Button } from '@/components/ui/button'; // ajuste o caminho se necessário
+
 export default function TextInput() {
+  const [text, setText] = useState('');
+
   return (
-    <div className="w-full max-w-2xl px-2 sm:px-0">
-      <div className="flex items-center w-full bg-gray-700 border border-orange-400 rounded-full px-4 py-4 sm:px-6 sm:py-3 shadow-sm hover:shadow-md transition">
-        
+    <div className="w-full px-2 sm:px-0">
+      <div className="flex items-center w-full bg-gray-700 border border-orange-400 rounded-full px-4 py-3 sm:px-6 shadow-sm hover:shadow-md transition">
+
         {/* Ícone de lupa à esquerda */}
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -21,28 +26,68 @@ export default function TextInput() {
           />
         </svg>
 
-        {/* Campo de texto */}
-        <input
-          type="text"
-          placeholder="Digite sua measnsagem..."
-          className="flex-grow bg-transparent text-white placeholder-gray-300 outline-none text-sm sm:text-base"
+        {/* Campo de texto com expansão e rolagem */}
+        <textarea
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          placeholder="Digite sua mensagem..."
+          rows={2}
+          className="flex-grow bg-transparent text-white placeholder-gray-300 outline-none text-sm sm:text-base resize-none max-h-[6.5rem] overflow-y-auto scrollbar-thin scrollbar-thumb-orange-400 scrollbar-track-gray-600"
         />
 
-        {/* Ícone de microfone com X à direita */}
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-5 w-5 text-white ml-2 sm:ml-3 cursor-not-allowed"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
+        {/* Botão "+" */}
+        <Button
+          variant="ghost"
+          size="icon"
+          className="text-white hover:text-orange-400 ml-2 sm:ml-3"
+          title="Mais opções"
         >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M12 1a3 3 0 013 3v8a3 3 0 01-6 0V4a3 3 3 0 013-3zm0 14v4m0 0h-3m3 0h3M15 9l6 6M21 9l-6 6"
-          />
-        </svg>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-5 w-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+          </svg>
+        </Button>
+
+        {/* Botão microfone */}
+        <Button
+          variant="ghost"
+          size="icon"
+          className="text-white hover:text-orange-400 ml-2 sm:ml-3"
+          title="Microfone"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-5 w-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 1a3 3 0 013 3v7a3 3 0 01-6 0V4a3 3 0 013-3zm0 14v4m-4 0h8" />
+          </svg>
+        </Button>
+
+        {/* Botão enviar */}
+        <Button
+          variant="ghost"
+          size="icon"
+          className="text-white hover:text-orange-400 ml-2 sm:ml-3"
+          title="Enviar"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-5 w-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12l14-7-7 14-2-5-5-2z" />
+          </svg>
+        </Button>
       </div>
     </div>
   );

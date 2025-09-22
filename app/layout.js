@@ -26,7 +26,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${ubuntuSans.variable} ${ubuntuMono.variable}`}>
-      <body className="font-sans antialiased bg-[#182338]/80 relative h-screen">
+      <body className="font-sans antialiased bg-[#182338]/80 h-screen overflow-hidden">
 
         {/* Fundo de estrelas */}
         <div className="fixed inset-0 z-[-10] pointer-events-none overflow-hidden">
@@ -38,21 +38,24 @@ export default function RootLayout({ children }) {
           <MarioClouds />
         </div>
 
-        {/* Navbar fixa no topo */}
-        <div className=" w-full h-16">
+        {/* Navbar fixa */}
+        <div className="fixed top-0 left-0 w-full h-16 z-50">
           <Navbar />
         </div>
 
-        
+        {/* Conteúdo principal entre navbar e footer */}
+        <div className="pt-16 pb-16 h-full">
+          <main className="h-full overflow-auto">
             {children}
+          </main>
+        </div>
 
-        
-        {/* Rodapé fixo acima das nuvens */}
+        {/* Rodapé fixo */}
         <footer className="fixed bottom-0 left-0 w-full h-16 z-20 bg-[var(--footer-bg)] text-gray-200 text-center flex items-center justify-center">
           © 2025 Knobot. Todos os direitos reservados.
         </footer>
-
       </body>
     </html>
   );
 }
+

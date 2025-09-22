@@ -51,7 +51,7 @@ export default function EmpresaCarousel() {
                             key={index}
                             className="pl-4 basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4"
                         >
-                            <div className="border-[1px] border-orange-400 bg-white rounded shadow h-40 flex flex-col overflow-hidden">
+                            <div className=" bg-white rounded shadow h-40 flex flex-col overflow-hidden">
                                 {/* Parte superior com logo como fundo */}
                                 <div
                                     className="m-3 flex-[1.2] bg-center bg-no-repeat bg-contain"
@@ -63,7 +63,7 @@ export default function EmpresaCarousel() {
 
                                 {/* Parte inferior com nome, slogan e logo pequena */}
                                 <div
-                                    className="flex-[0.8] bg-[var(--footer-bg)]  bg-opacity-80 p-2 text-center"
+                                    className="flex-[0.8] bg-gray-500  bg-opacity-80 p-2 text-center"
                                 >
                                     <h3 className="text-lg text-orange-400 font-semibold">
                                         {empresa.nome}

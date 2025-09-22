@@ -9,12 +9,13 @@ const modak = Modak({
 export default function KnoBotName({ size = 'text-5xl' }) {
   return (
     <h1
-      className={`${modak.className} ${size} text-whitefont-bold`}
+      className={`${modak.className} ${size} text-white font-bold break-words text-center`}
       style={{
-        WebkitTextStroke: '1px #000000', // borda preta
+        WebkitTextStroke: '1px #000000',
       }}
     >
       KnoBot
     </h1>
   );
 }
+

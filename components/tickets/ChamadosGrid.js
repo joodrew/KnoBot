@@ -6,13 +6,11 @@ export default function ChamadosGrid({ chamados }) {
       <h2 className="text-2xl pt-10 font-bold text-center text-orange-400 mb-6">
         Chamados
       </h2>
-
-      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {chamados.map((chamado) => (
-          <ChamadoCard key={chamado.id} chamado={chamado} />
-        ))}
-      </div>
-      <div className="pb-10"></div>
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {chamados.map((chamado) => (
+            <ChamadoCard key={chamado.id} chamado={chamado} />
+          ))}
+        </div>
     </div>
   );
 }

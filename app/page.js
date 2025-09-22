@@ -3,12 +3,12 @@ import KnoBotName from "@/components/KnoBotName";
 
 export default function Home() {
   return (
-    <div className="font-sans flex flex-col min-h-screen text-[var(--foreground)]">
+    <div className="font-sans flex flex-col h-full text-[var(--foreground)]">
       
       {/* Conteúdo principal */}
-      <main className="flex-grow flex flex-col items-center justify-start pt-65 px-4">
+      <main className="flex-1 flex flex-col items-center justify-center px-4 overflow-auto">
         
-        <KnoBotName size="text-9xl" />
+        <KnoBotName size="text-5xl sm:text-6xl md:text-7xl lg:text-9xl" />
 
         <div className="w-full max-w-xl flex flex-col items-center gap-4">
           <InputSearch />

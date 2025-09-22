@@ -28,7 +28,7 @@ export default function Navbar() {
 
   return (
     <>
-      <header className="w-full  bg-[var(--nav-bg)] text-white shadow-md relative z-50">
+      <header className="w-full  bg-[var(--nav-bg)] text-white  relative z-50">
         <div className="mx-auto px-4 py-4 flex items-center justify-between gap-4 h-full">
           {/* Logo */}
           <div className="flex-shrink-0">
@@ -77,7 +77,7 @@ export default function Navbar() {
 
       {/* Menu mobile fixo abaixo do header */}
       {menuOpen && isMobile && (
-        <div className="fixed top-16 left-0 w-full bg-[var(--nav-bg)] text-white flex flex-col items-center py-6 gap-6 shadow-lg z-40">
+        <div className="fixed top-16 left-0 w-full bg-[var(--nav-bg)] text-white flex flex-col items-center py-6 gap-6  z-40">
           <Link href="/" className="flex items-center gap-2 text-white hover:text-orange-400 transition" onClick={() => setMenuOpen(false)}>
             <HomeIcon fontSize="small" />
             <span>Inicio</span>

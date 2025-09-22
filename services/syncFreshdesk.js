@@ -14,10 +14,7 @@ function sleep(ms) {
 export async function syncFreshdeskTickets({ validateStatus = true } = {}) {
     try {
         if (!cachedClient) {
-            cachedClient = await MongoClient.connect(MONGODB_URI, {
-                useNewUrlParser: true,
-                useUnifiedTopology: true,
-            });
+            cachedClient = await MongoClient.connect(MONGODB_URI);
         }
 
         const db = cachedClient.db(MONGODB_DB_NAME);

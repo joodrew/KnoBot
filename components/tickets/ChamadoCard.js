@@ -2,7 +2,7 @@ import ChamadoModal from "../tickets/ChamadoModal";
 
 export default function ChamadoCard({ chamado }) {
   return (
-    <div className="border-[1px] border-orange-400 rounded bg-[var(--footer-bg)] shadow text-white cursor-pointer hover:brightness-110 transition">
+    <div className=" rounded bg-[var(--ticketCard-bg)] shadow text-black cursor-pointer hover:brightness-110 transition">
       <ChamadoModal chamado={chamado}>
         <div className="min-h-[100px] px-4 py-2 flex justify-between items-center gap-2">
           {/* Conteúdo do card */}
@@ -10,7 +10,7 @@ export default function ChamadoCard({ chamado }) {
             <p className="text-sm font-semibold text-orange-400 break-words">
               {chamado.processo}
             </p>
-            <p className="text-sm text-white break-words">
+            <p className="text-sm text-black break-words">
               {chamado.problema}
             </p>
           </div>
