@@ -44,11 +44,14 @@ export default function RootLayout({ children }) {
         </div>
 
         {/* Conteúdo principal entre navbar e footer */}
-        <div className="pt-16 pb-16 h-full">
-          <main className="h-full overflow-auto">
+
+        <div className="pt-16 pb-10 flex flex-col h-screen">
+          <main className="flex-1 overflow-hidden">
             {children}
           </main>
         </div>
+
+
 
         {/* Rodapé fixo */}
         <footer className="fixed bottom-0 left-0 w-full h-16 z-20 bg-[var(--footer-bg)] text-gray-200 text-center flex items-center justify-center">

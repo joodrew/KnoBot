@@ -22,30 +22,52 @@ export default function Tickets() {
       id: 4,
       processo: "SHS_AtualizaçãoDeCadastro",
       problema: "Campo obrigatório não aparece",
-    },{
+    },
+    {
       id: 5,
       processo: "SHS_AtualizaçãoDeCadastro",
       problema: "Campo obrigatório não aparece",
-    },{
+    },
+    {
       id: 6,
       processo: "SHS_AtualizaçãoDeCadastro",
       problema: "Campo obrigatório não aparece",
-    },{
-      id: 8,
-      processo: "SHS_AtualizaçãoDeCadastro",
-      problema: "Campo obrigatório não aparece",
-    },{
+    },
+    {
       id: 7,
       processo: "SHS_AtualizaçãoDeCadastro",
       problema: "Campo obrigatório não aparece",
     },
-    // ...mais chamados
+    {
+      id: 9,
+      processo: "SHS_AtualizaçãoDeCadastro",
+      problema: "Campo obrigatório não aparece",
+    },
+    {
+      id: 10,
+      processo: "SHS_AtualizaçãoDeCadastro",
+      problema: "Campo obrigatório não aparece",
+    },
+    {
+      id: 11,
+      processo: "SHS_AtualizaçãoDeCadastro",
+      problema: "Campo obrigatório não aparece",
+    },
+    {
+      id: 12,
+      processo: "SHS_AtualizaçãoDeCadastro",
+      problema: "Campo obrigatório não aparece",
+    },
   ];
 
+ 
+
   return (
-    <div className="w-full px-4 py-8">
+    <div className="flex flex-col h-full w-full py-8">
       <EmpresaCarousel />
-      <ChamadosGrid chamados={chamados} />
+      <div className="flex-1 min-h-0 overflow-hidden">
+        <ChamadosGrid chamados={chamados} />
+      </div>
     </div>
   );
 }
