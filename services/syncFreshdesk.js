@@ -1,160 +1,169 @@
 import { MongoClient } from "mongodb";
 
-const FRESHDESK_DOMAIN = process.env.FRESHDESK_DOMAIN;
-const FRESHDESK_API_KEY = process.env.FRESHDESK_API_KEY;
-const MONGODB_URI = process.env.MONGODB_URI;
-const MONGODB_DB_NAME = process.env.MONGODB_DB_NAME;
+const {
+  FRESHDESK_DOMAIN,
+  MONGODB_URI,
+  MONGODB_DB_NAME, //alterar esse nome para algo relaciona ao db tickets
+  FRESHDESK_API_KEYS // Espere um string separado por vírgula, ex: "KEY1,KEY2"
+} = process.env;
 
-let cachedClient = null;
+const apiKeys = FRESHDESK_API_KEYS.split(",");
+const DOMAIN = FRESHDESK_DOMAIN;
+let mongoClient;
 
+/** Pausa por ms */
 function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-export async function syncFreshdeskTickets({ validateStatus = true } = {}) {
-    try {
-        if (!cachedClient) {
-            cachedClient = await MongoClient.connect(MONGODB_URI);
-        }
-
-        const db = cachedClient.db(MONGODB_DB_NAME);
-        const ticketsCollection = db.collection("tickets");
-        const errorCollection = db.collection("importErr");
-        const statusCollection = db.collection("status");
-
-        await ticketsCollection.createIndex({ id: 1 }, { unique: true });
-        await errorCollection.createIndex({ id: 1 }, { unique: true });
-        await statusCollection.createIndex({ id: 1 }, { unique: true });
-
-        const latestResponse = await fetch(`https://${FRESHDESK_DOMAIN}.freshdesk.com/api/v2/tickets?order_by=created_at&order_type=desc&page=1`, {
-            headers: {
-                Authorization: "Basic " + Buffer.from(`${FRESHDESK_API_KEY}:X`).toString("base64"),
-                "Content-Type": "application/json",
-            },
-        });
-
-        const latestTickets = await latestResponse.json();
-        let ticketId = latestTickets[0]?.id || 0;
-        let totalInserted = 0;
-        let requestCount = 0;
-
-        while (ticketId >= 0 && requestCount < 1000) {
-            const ticketUrl = `https://${FRESHDESK_DOMAIN}.freshdesk.com/api/v2/tickets/${ticketId}`;
-            const conversationsUrl = `${ticketUrl}/conversations`;
-
-            const headers = {
-                Authorization: "Basic " + Buffer.from(`${FRESHDESK_API_KEY}:X`).toString("base64"),
-                "Content-Type": "application/json",
-            };
-
-            try {
-                if (validateStatus) {
-                    const localStatus = await statusCollection.findOne({ id: ticketId });
-                    if (localStatus?.status === "Encerrado") {
-                        ticketId--;
-                        continue;
-                    }
-                }
-
-                const ticketResponse = await fetch(ticketUrl, { headers });
-                requestCount++;
-
-                const remaining = parseInt(ticketResponse.headers.get("x-ratelimit-remaining") || "0", 10);
-                if (remaining < 10) {
-                    console.warn(`Quase atingindo o limite de requisições (${remaining}/1000). Aguardando 60 segundos...`);
-                    await sleep(60000);
-                }
-
-                if (ticketResponse.status === 429) {
-                    const retryAfter = parseInt(ticketResponse.headers.get("Retry-After") || "60", 10);
-                    console.warn(`Rate limit atingido. Aguardando ${retryAfter} segundos...`);
-                    await sleep(retryAfter * 1000);
-                    continue;
-                }
-
-                if (!ticketResponse.ok) {
-                    const errorMsg = `Erro ${ticketResponse.status}: ${ticketResponse.statusText}`;
-                    const exists = await errorCollection.findOne({ id: ticketId });
-                    if (!exists) {
-                        await errorCollection.insertOne({ id: ticketId, codemsg: errorMsg });
-                    }
-                    ticketId--;
-                    await sleep(500);
-                    continue;
-                }
-
-                const ticketData = await ticketResponse.json();
-                const statusLabel = (ticketData.status === 4 || ticketData.status === 5) ? "Encerrado" : "Aberto-Pendente";
-
-                if (validateStatus) {
-                    await statusCollection.updateOne(
-                        { id: ticketId },
-                        { $set: { id: ticketId, status: statusLabel } },
-                        { upsert: true }
-                    );
-
-                    if (statusLabel === "Aberto-Pendente") {
-                        ticketId--;
-                        await sleep(500);
-                        continue;
-                    }
-                }
-
-                // Inserir ticket no MongoDB
-                try {
-                    await ticketsCollection.insertOne(ticketData);
-                    totalInserted++;
-
-                    // Buscar conversas somente após inserção
-                    const convResponse = await fetch(conversationsUrl, { headers });
-                    requestCount++;
-                    const conversations = convResponse.ok ? await convResponse.json() : [];
-
-                    await ticketsCollection.updateOne(
-                        { id: ticketId },
-                        { $set: { conversations } }
-                    );
-                } catch (err) {
-                    if (err.code !== 11000) {
-                        console.error("Erro ao inserir ticket:", err);
-                    }
-                }
-
-
-                ticketData.conversations = conversations;
-
-                try {
-                    await ticketsCollection.insertOne(ticketData);
-                    totalInserted++;
-                } catch (err) {
-                    if (err.code !== 11000) {
-                        console.error("Erro ao inserir ticket:", err);
-                    }
-                }
-            } catch (err) {
-                const exists = await errorCollection.findOne({ id: ticketId });
-                if (!exists) {
-                    await errorCollection.insertOne({ id: ticketId, codemsg: err.message });
-                }
-            }
-
-            ticketId--;
-            await sleep(500);
-        }
-
-        console.log(`Processo encerrado. Limite de ${requestCount} requisições atingido ou ticketId chegou a 0.`);
-
-        return {
-            success: true,
-            inserted: totalInserted,
-            message: `Sincronização concluída. ${totalInserted} tickets adicionados.`,
-        };
-
-    } catch (error) {
-        console.error("Erro na sincronização:", error);
-        return {
-            success: false,
-            error: error.message,
-        };
+/** Busca o maior ticketId existente no Freshdesk */
+async function fetchMaxTicketId(apiKey) {
+  const res = await fetch(
+    `https://${DOMAIN}.freshdesk.com/api/v2/tickets?order_by=created_at&order_type=desc&page=1`,
+    {
+      headers: {
+        Authorization: "Basic " + Buffer.from(`${apiKey}:X`).toString("base64"),
+        "Content-Type": "application/json",
+      },
     }
+  );
+  const list = await res.json();
+  return list[0]?.id || 0;
+}
+
+/** Worker que processa IDs congruentes a seu índice */
+async function worker(workerIndex, maxId) {
+  const apiKey = apiKeys[workerIndex].trim();
+  const headers = {
+    Authorization: "Basic " + Buffer.from(`${apiKey}:X`).toString("base64"),
+    "Content-Type": "application/json",
+  };
+
+  const db = mongoClient.db(MONGODB_DB_NAME);
+  const ticketsCol = db.collection("tickets");
+  const statusCol = db.collection("status");
+  const errorsCol = db.collection("importErr");
+
+  // Garantir índices únicos
+  await ticketsCol.createIndex({ id: 1 }, { unique: true });
+  await statusCol.createIndex({ id: 1 }, { unique: true });
+  await errorsCol.createIndex({ id: 1 }, { unique: true });
+
+  for (let ticketId = maxId - workerIndex; ticketId > 0; ticketId -= apiKeys.length) {
+    // 1) Pular ticket já encerrado
+    const st = await statusCol.findOne({ id: ticketId });
+    if (st?.status === "Encerrado") continue;
+
+    // 2) Pular se já temos conversas
+    const existing = await ticketsCol.findOne(
+      { id: ticketId },
+      { projection: { conversations: 1 } }
+    );
+    if (existing?.conversations?.length > 0) continue;
+
+    // 3) Buscar ticket
+    let ticketRes;
+    try {
+      ticketRes = await fetch(
+        `https://${DOMAIN}.freshdesk.com/api/v2/tickets/${ticketId}`,
+        { headers }
+      );
+    } catch (err) {
+      await errorsCol.updateOne(
+        { id: ticketId },
+        { $setOnInsert: { id: ticketId, error: err.message } },
+        { upsert: true }
+      );
+      continue;
+    }
+
+    // 4) Rate limit
+    if (ticketRes.status === 429) {
+      const retry = parseInt(ticketRes.headers.get("Retry-After") || "60", 10);
+      await sleep(retry * 1000);
+      ticketId += apiKeys.length; // repetir este ID
+      continue;
+    }
+
+    if (!ticketRes.ok) {
+      await errorsCol.updateOne(
+        { id: ticketId },
+        {
+          $setOnInsert: {
+            id: ticketId,
+            error: `HTTP ${ticketRes.status}: ${ticketRes.statusText}`,
+          },
+        },
+        { upsert: true }
+      );
+      continue;
+    }
+
+    const ticketData = await ticketRes.json();
+    const statusLabel =
+      ticketData.status === 4 || ticketData.status === 5
+        ? "Encerrado"
+        : "Aberto-Pendente";
+
+    // 5) Marcar status e pular abertos pendentes
+    await statusCol.updateOne(
+      { id: ticketId },
+      { $set: { id: ticketId, status: statusLabel } },
+      { upsert: true }
+    );
+    if (statusLabel !== "Encerrado") continue;
+
+    // 6) Inserir ticket (apenas 1x)
+    const insertResult = await ticketsCol.updateOne(
+      { id: ticketId },
+      { $setOnInsert: ticketData },
+      { upsert: true }
+    );
+
+    // 7) Se inserido agora OU falta conversas, buscar e salvar
+    if (insertResult.upsertedCount === 1 || !existing) {
+      let convList = [];
+      try {
+        const convRes = await fetch(
+          `https://${DOMAIN}.freshdesk.com/api/v2/tickets/${ticketId}/conversations`,
+          { headers }
+        );
+        if (convRes.ok) convList = await convRes.json();
+      } catch (e) {
+        console.warn(`Erro conversas #${ticketId}:`, e.message);
+      }
+
+      await ticketsCol.updateOne(
+        { id: ticketId },
+        { $set: { conversations: convList } }
+      );
+    }
+
+    // 8) Intervalo mínimo entre requisições
+    await sleep(500);
+  }
+
+  console.log(`Worker ${workerIndex} finalizado.`);
+}
+
+/** Função principal: conecta ao Mongo, busca maxId e dispara workers */
+export async function syncFreshdeskTickets() {
+  try {
+    if (!mongoClient) {
+      mongoClient = await MongoClient.connect(MONGODB_URI);
+    }
+
+    // Determinar maior ID apenas com a primeira chave
+    const maxId = await fetchMaxTicketId(apiKeys[0]);
+
+    // Dispara todos os workers em paralelo
+    await Promise.all(
+      apiKeys.map((_, idx) => worker(idx, maxId))
+    );
+
+    return { success: true, message: "Sincronização concluída em paralelo." };
+  } catch (error) {
+    console.error("Erro na sincronização:", error);
+    return { success: false, error: error.message };
+  }
 }

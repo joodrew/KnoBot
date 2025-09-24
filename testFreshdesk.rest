@@ -1,4 +1,4 @@
 curl -v -u J8CThAcjWcE1ZIAe1T7:X \
 -H "Content-Type: application/json" \
 -X GET \
-"https://biti9.freshdesk.com/api/v2/tickets"
+"https://biti9.freshdesk.com/api/v2/companies"
