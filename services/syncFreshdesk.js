@@ -7,7 +7,10 @@ const {
   FRESHDESK_API_KEYS // Espere um string separado por vírgula, ex: "KEY1,KEY2"
 } = process.env;
 
-const apiKeys = FRESHDESK_API_KEYS.split(",");
+const apiKeys = FRESHDESK_API_KEYS?.includes(",")
+  ? FRESHDESK_API_KEYS.split(",")
+  : [FRESHDESK_API_KEYS];
+
 const DOMAIN = FRESHDESK_DOMAIN;
 let mongoClient;
 
