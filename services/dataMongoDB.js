@@ -1,4 +1,4 @@
-import { MongoClient } from 'mongodb';
+const { MongoClient } = require('mongodb');
 
 const uri = process.env.MONGODB_URI;
 let client;
@@ -14,10 +14,9 @@ if (!global._mongoClientPromise) {
 }
 clientPromise = global._mongoClientPromise;
 
-export async function dataMongoDB({ dbName, collectionName, key }: { dbName: string, collectionName: string, key: string }) {
+async function dataMongoDB({ dbName, collectionName, key }) {
   const client = await clientPromise;
   const db = client.db(dbName);
-
   const collection = db.collection(collectionName);
 
   const projection = { [key]: 1, _id: 0 };
@@ -25,3 +24,5 @@ export async function dataMongoDB({ dbName, collectionName, key }: { dbName: str
 
   return data;
 }
+
+module.exports = { dataMongoDB };
