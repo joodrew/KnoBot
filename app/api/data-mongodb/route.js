@@ -6,6 +6,8 @@ export async function GET(request) {
   const db = searchParams.get('db');
   const collection = searchParams.get('collection');
   const keysParam = searchParams.get('keys');
+  const limit = parseInt(searchParams.get('limit') || '100');
+  const skip = parseInt(searchParams.get('skip') || '0');
 
   if (!db || !collection || !keysParam) {
     return NextResponse.json(
@@ -14,7 +16,6 @@ export async function GET(request) {
     );
   }
 
-  // Transforma "subject,priority,status" em array
   const keys = keysParam.split(',').map(k => k.trim()).filter(Boolean);
 
   try {
@@ -22,6 +23,8 @@ export async function GET(request) {
       dbName: db,
       collectionName: collection,
       keys,
+      limit,
+      skip,
     });
 
     return NextResponse.json(result);
