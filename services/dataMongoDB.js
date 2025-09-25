@@ -14,15 +14,21 @@ if (!global._mongoClientPromise) {
 }
 clientPromise = global._mongoClientPromise;
 
-async function dataMongoDB({ dbName, collectionName, key }) {
+async function dataMongoDB({ dbName, collectionName, keys }) {
   const client = await clientPromise;
   const db = client.db(dbName);
   const collection = db.collection(collectionName);
 
-  const projection = { [key]: 1, _id: 0 };
+  // Monta o projection com múltiplas chaves
+  const projection = keys.reduce((acc, key) => {
+    acc[key] = 1;
+    return acc;
+  }, { _id: 0 });
+
   const data = await collection.find({}, { projection }).toArray();
 
   return data;
 }
+
 
 module.exports = { dataMongoDB };
