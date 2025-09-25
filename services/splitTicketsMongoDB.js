@@ -20,9 +20,9 @@ export async function splitTicketsMongoDB() {
   const db = client.db('freshdesk');
 
   // Remove a coleção se já existir
-  const collections = await db.listCollections({ name: 'filtroPrimeiro' }).toArray();
+  const collections = await db.listCollections({ name: 'splitedBySubject' }).toArray();
   if (collections.length > 0) {
-    await db.collection('filtroPrimeiro').drop();
+    await db.collection('splitedBySubject').drop();
   }
 
   // Pipeline para agrupar por subject e extrair id dos tickets e id das conversas
@@ -67,7 +67,7 @@ export async function splitTicketsMongoDB() {
   ];
 
   const result = await db.collection('tickets').aggregate(pipeline, { allowDiskUse: true }).toArray();
-  await db.collection('filtroPrimeiro').insertMany(result);
+  await db.collection('splitedBySubject').insertMany(result);
 
-  return { success: true, message: '✅ Coleção "filtroPrimeiro" criada com sucesso com tickets agrupados por subject.' };
+  return { success: true, message: '✅ Coleção "splitedBySubject" criada com sucesso com tickets agrupados por subject.' };
 }
