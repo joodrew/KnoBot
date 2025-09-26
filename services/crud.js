@@ -5,9 +5,14 @@ const dbName = 'dify';
 const collectionName = 'groupedSub';
 
 export async function crud(input) {
-  // Se for um único objeto, transforma em array
-  const data = Array.isArray(input) ? input : [input];
+  if (!uri) {
+    throw new Error('MONGODBDUMP_URI não está definido nas variáveis de ambiente');
+  }
 
+  console.log('🔍 URI do MongoDB:', uri);
+
+  const data = Array.isArray(input) ? input : [input];
+console.log(data)
   const client = new MongoClient(uri);
   await client.connect();
 

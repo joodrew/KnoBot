@@ -1,17 +1,23 @@
-curl -X POST http://localhost:3000/api/crud \
+curl -X POST https://kno-bot.vercel.app/api/crud \
   -H "Content-Type: application/json" \
-  -d '{ 
-    "data": [
-      {
-        "group": "teste",
-        "tickets": [
-          {
-            "id": 1,
-            "conversations": [
-              { "id": 123 }
-            ]
-          }
-        ]
-      }
-    ]
-  }'
+  -d '[
+    {
+      "group": "erro_conexao",
+      "tickets": [
+        {
+          "id": "123",
+          "conversations": [{ "id": "456" }]
+        }
+      ]
+    },
+    {
+      "group": "falha_login",
+      "tickets": [
+        {
+          "id": "789",
+          "conversations": [{ "id": "101112" }]
+        }
+      ]
+    }
+  ]'
+
