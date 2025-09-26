@@ -1,12 +1,12 @@
-import { NextResponse } from 'next/server';
-import { MongoClient } from 'mongodb';
+const { NextResponse } = require('next/server');
+const { MongoClient } = require('mongodb');
 
 const uri = process.env.MONGODBDUMP_URI;
 const client = new MongoClient(uri);
 const dbName = 'dify';
 const collectionName = 'groupedSub';
 
-export async function POST(req) {
+async function handlePost(req) {
   try {
     const body = await req.json();
     const { data } = body;
@@ -44,3 +44,7 @@ export async function POST(req) {
     await client.close();
   }
 }
+
+module.exports = {
+  POST: handlePost
+};
