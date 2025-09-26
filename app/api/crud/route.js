@@ -1,4 +1,4 @@
-import { crud } from '@/lib/crud';
+import { crud } from '@/services/crud';
 import { NextResponse } from 'next/server';
 
 export async function POST(request) {
