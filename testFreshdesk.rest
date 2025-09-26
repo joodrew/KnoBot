@@ -1,4 +1,18 @@
-curl -v -u J8CThAcjWcE1ZIAe1T7:X \
--H "Content-Type: application/json" \
--X GET \
-"https://biti9.freshdesk.com/api/v2/companies"
+curl -X POST https://kno-bot.vercel.app/api/crud \
+  -H "Content-Type: application/json" \
+  -d '{
+    "data": [
+      {
+        "group": "teste",
+        "tickets": [
+          {
+            "id": 1,
+            "conversations": [
+              { "id": 123 }
+            ]
+          }
+        ],
+        "representative_subject": "teste"
+      }
+    ]
+  }'
