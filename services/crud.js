@@ -4,7 +4,7 @@ const uri = process.env.MONGODBDUMP_URI;
 const dbName = 'dify';
 const collectionName = 'groupedSub';
 
-export async function saveGroupedSubjects(data) {
+export async function crud(data) {
   if (!Array.isArray(data)) {
     throw new Error('"data" deve ser um array');
   }
