@@ -1,25 +1,16 @@
+import { crud } from '@/lib/crud';
 import { NextResponse } from 'next/server';
-import { crud } from '@/services/crud';
 
-export async function POST(req) {
+export async function POST(request) {
   try {
-    const body = await req.json();
-    const { data } = body;
+    const body = await request.json();
+    const result = await crud(body);
 
-    const result = await crud(data);
-
-    return NextResponse.json({ success: true, results: result });
+    return NextResponse.json({ success: true, result });
   } catch (error) {
-    console.error('❌ Erro na API (POST /crud):', error);
-    return NextResponse.json({ success: false, error: error.message || 'Erro interno do servidor' }, { status: 500 });
-  }
-}
-
-export async function GET() {
-  try {
-    return "POST API";
-  } catch (error) {
-    console.error('❌ Erro na API (GET):', error);
-    return Response.json({ error: error.message || 'Erro interno do servidor' }, { status: 500 });
+    return NextResponse.json(
+      { success: false, error: error.message },
+      { status: 400 }
+    );
   }
 }
