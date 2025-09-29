@@ -1,20 +1,26 @@
 const { MongoClient } = require('mongodb');
 
-const uri = process.env.MONGODB_URI;
-let client;
-let clientPromise;
+const uriMain = process.env.MONGODB_URI;
+const uriDump = process.env.MONGODBDUMP_URI;
 
-if (!uri) {
-  throw new Error('❌ MONGODB_URI não está definida em .env.local');
-}
+const clients = {
+  main: new MongoClient(uriMain),
+  dump: new MongoClient(uriDump),
+};
 
-if (!global._mongoClientPromise) {
-  client = new MongoClient(uri);
-  global._mongoClientPromise = client.connect();
-}
-clientPromise = global._mongoClientPromise;
+const clientPromises = {
+  main: clients.main.connect(),
+  dump: clients.dump.connect(),
+};
 
-async function dataMongoDB({ dbName, collectionName, keys, limit = 100, skip = 0 }) {
+async function dataMongoDB({ dbName, collectionName, keys, limit = 100, skip = 0, useDumpCluster = false }) {
+  const clusterKey = useDumpCluster ? 'dump' : 'main';
+  const clientPromise = clientPromises[clusterKey];
+
+  if (!clientPromise) {
+    throw new Error(`❌ Cluster "${clusterKey}" não está disponível.`);
+  }
+
   const client = await clientPromise;
   const db = client.db(dbName);
   const collection = db.collection(collectionName);
@@ -28,6 +34,5 @@ async function dataMongoDB({ dbName, collectionName, keys, limit = 100, skip = 0
 
   return data;
 }
-
 
 module.exports = { dataMongoDB };

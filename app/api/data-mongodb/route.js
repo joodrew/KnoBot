@@ -8,6 +8,7 @@ export async function GET(request) {
   const keysParam = searchParams.get('keys');
   const limit = parseInt(searchParams.get('limit') || '100');
   const skip = parseInt(searchParams.get('skip') || '0');
+  const dump = searchParams.get('dump') === 'true'; // converte para booleano
 
   if (!db || !collection || !keysParam) {
     return NextResponse.json(
@@ -25,6 +26,7 @@ export async function GET(request) {
       keys,
       limit,
       skip,
+      useDumpCluster: dump,
     });
 
     return NextResponse.json(result);
