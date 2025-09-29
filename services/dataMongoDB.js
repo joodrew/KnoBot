@@ -13,7 +13,16 @@ const clientPromises = {
   dump: clients.dump.connect(),
 };
 
-async function dataMongoDB({ dbName, collectionName, keys, limit = 100, skip = 0, useDumpCluster = false }) {
+async function dataMongoDB({
+  dbName,
+  collectionName,
+  keys,
+  limit = 100,
+  skip = 0,
+  useDumpCluster = false,
+  filterField,
+  filterValue,
+}) {
   const clusterKey = useDumpCluster ? 'dump' : 'main';
   const clientPromise = clientPromises[clusterKey];
 
@@ -30,7 +39,10 @@ async function dataMongoDB({ dbName, collectionName, keys, limit = 100, skip = 0
     return acc;
   }, { _id: 0 });
 
-  const data = await collection.find({}, { projection }).skip(skip).limit(limit).toArray();
+  // 🔍 Filtro genérico
+  const query = filterField && filterValue ? { [filterField]: filterValue } : {};
+
+  const data = await collection.find(query, { projection }).skip(skip).limit(limit).toArray();
 
   return data;
 }
