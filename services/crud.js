@@ -9,10 +9,7 @@ export async function crud(input) {
     throw new Error('MONGODBDUMP_URI não está definido nas variáveis de ambiente');
   }
 
-  console.log('🔍 URI do MongoDB:', uri);
-
   const data = Array.isArray(input) ? input : [input];
-console.log(data)
   const client = new MongoClient(uri);
   await client.connect();
 
@@ -31,21 +28,27 @@ console.log(data)
       continue;
     }
 
-    const existing = await collection.findOne({ group: group.group });
+    // Normaliza o nome do grupo para minúsculas
+    const normalizedGroupName = group.group.toLowerCase();
+
+    const existing = await collection.findOne({ group: normalizedGroupName });
 
     if (existing) {
       await collection.updateOne(
-        { group: group.group },
+        { group: normalizedGroupName },
         {
           $addToSet: {
             tickets: { $each: group.tickets }
           }
         }
       );
-      results.push({ group: group.group, action: 'updated' });
+      results.push({ group: normalizedGroupName, action: 'updated' });
     } else {
-      await collection.insertOne(group);
-      results.push({ group: group.group, action: 'created' });
+      await collection.insertOne({
+        group: normalizedGroupName,
+        tickets: group.tickets
+      });
+      results.push({ group: normalizedGroupName, action: 'created' });
     }
   }
 
