@@ -2,7 +2,7 @@ import { MongoClient } from 'mongodb';
 
 const uri = process.env.MONGODBDUMP_URI;
 const dbName = 'dify';
-const collectionName = 'groupedSub';
+const collectionName = 'groupedSubject';
 
 export async function crud(input) {
   if (!uri) {
