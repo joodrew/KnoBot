@@ -31,24 +31,58 @@ export async function crud(input, collectionOverride) {
 
     const normalizedGroupName = group.group.toLowerCase();
 
-    const existing = await collection.findOne({ group: normalizedGroupName });
+    for (const ticket of group.tickets) {
+      const { subject, desc, id, conversations } = ticket;
 
-    if (existing) {
-      await collection.updateOne(
-        { group: normalizedGroupName },
-        {
-          $addToSet: {
-            tickets: { $each: group.tickets }
+      // Verifica se já existe um ticket com mesmo subject e desc
+      const existing = await collection.findOne({
+        group: normalizedGroupName,
+        tickets: {
+          $elemMatch: {
+            subject,
+            desc
           }
         }
-      );
-      results.push({ group: normalizedGroupName, action: 'updated' });
-    } else {
-      await collection.insertOne({
-        group: normalizedGroupName,
-        tickets: group.tickets
       });
-      results.push({ group: normalizedGroupName, action: 'created' });
+
+      if (existing) {
+        // Atualiza o ticket existente adicionando novos IDs e conversas
+        await collection.updateOne(
+          {
+            group: normalizedGroupName,
+            "tickets.subject": subject,
+            "tickets.desc": desc
+          },
+          {
+            $addToSet: {
+              "tickets.$.id": { $each: id },
+              "tickets.$.conversations": { $each: conversations }
+            }
+          }
+        );
+        results.push({ group: normalizedGroupName, subject, desc, action: 'merged into existing ticket' });
+      } else {
+        // Cria novo grupo ou adiciona novo ticket ao grupo existente
+        const groupExists = await collection.findOne({ group: normalizedGroupName });
+
+        if (groupExists) {
+          await collection.updateOne(
+            { group: normalizedGroupName },
+            {
+              $push: {
+                tickets: ticket
+              }
+            }
+          );
+          results.push({ group: normalizedGroupName, subject, desc, action: 'new ticket added to existing group' });
+        } else {
+          await collection.insertOne({
+            group: normalizedGroupName,
+            tickets: [ticket]
+          });
+          results.push({ group: normalizedGroupName, subject, desc, action: 'new group created with ticket' });
+        }
+      }
     }
   }
 
