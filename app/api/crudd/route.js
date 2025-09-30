@@ -1,4 +1,3 @@
-// app/api/crudd/route.js
 import { crud } from '@/services/crud';
 import { NextResponse } from 'next/server';
 
@@ -6,8 +5,10 @@ export async function POST(request) {
   try {
     const body = await request.json();
 
-    if (!body || typeof body !== 'object') {
-      throw new Error('❌ Corpo da requisição inválido ou vazio');
+    const { collection, data } = body;
+
+    if (!data || typeof data !== 'object') {
+      throw new Error('❌ Dados inválidos ou ausentes no campo "data"');
     }
 
     const uri = process.env.MONGODBDUMP_URI;
@@ -16,9 +17,10 @@ export async function POST(request) {
     }
 
     console.log('✅ URI carregada na rota:', uri);
-    console.log('📦 Body recebido:', JSON.stringify(body, null, 2));
+    console.log('📦 Collection recebida:', collection);
+    console.log('📦 Dados recebidos:', JSON.stringify(data, null, 2));
 
-    const result = await crud(body);
+    const result = await crud(data, collection);
 
     console.log('✅ Resultado da operação CRUD:', result);
 

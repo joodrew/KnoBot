@@ -1,4 +1,3 @@
-// services/crud.js
 import { MongoClient } from 'mongodb';
 
 const uri = process.env.MONGODBDUMP_URI;
