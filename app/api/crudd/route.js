@@ -5,10 +5,8 @@ export async function POST(request) {
   try {
     const body = await request.json();
 
-    const { collection, data } = body;
-
-    if (!data || typeof data !== 'object') {
-      throw new Error('❌ Dados inválidos ou ausentes no campo "data"');
+    if (!body || typeof body !== 'object') {
+      throw new Error('❌ Corpo da requisição inválido ou vazio');
     }
 
     const uri = process.env.MONGODBDUMP_URI;
@@ -17,7 +15,12 @@ export async function POST(request) {
     }
 
     console.log('✅ URI carregada na rota:', uri);
-    console.log('📦 Collection recebida:', collection);
+
+    // Suporte para formatos antigos e novos
+    const collection = body.collection || null;
+    const data = body.data || body;
+
+    console.log('📦 Collection recebida:', collection || '(padrão)');
     console.log('📦 Dados recebidos:', JSON.stringify(data, null, 2));
 
     const result = await crud(data, collection);

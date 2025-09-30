@@ -18,59 +18,54 @@ export async function crud(input, collectionOverride) {
 
   const results = [];
 
-  // Detecta se é formato antigo (array de agrupamentos com tickets por ID)
-  let tickets = [];
+  let items = [];
 
-  if (Array.isArray(input) && input.every(item => item.subject && item.desc && item.tickets)) {
-    console.warn('⚠️ Requisição antiga detectada. Adaptando...');
-
-    for (const item of input) {
-      const ids = Object.keys(item.tickets);
-      const conversations = ids.flatMap(id => item.tickets[id]);
-
-      tickets.push({
-        subject: item.subject,
-        desc: item.desc,
-        id: ids,
-        conversations
-      });
+  // Se for uma string JSON (como vem da LLM), faz o parse
+  if (typeof input === 'string') {
+    try {
+      items = JSON.parse(input);
+    } catch (err) {
+      throw new Error('❌ Erro ao fazer parse do JSON retornado pela LLM');
     }
   } else if (Array.isArray(input)) {
-    tickets = input;
-  } else if (input && input.tickets) {
-    tickets = input.tickets;
+    items = input;
   } else {
-    tickets = [input];
+    items = [input];
   }
 
-  for (const ticket of tickets) {
-    const { subject, desc, id = [], conversations = [] } = ticket;
+  for (const item of items) {
+    const { subject, desc, tickets } = item;
 
-    const existing = await collection.findOne({
-      subject,
-      desc
-    });
+    if (!subject || !desc || typeof tickets !== 'object') {
+      results.push({
+        subject: subject || 'undefined',
+        desc: desc || 'undefined',
+        action: 'skipped',
+        reason: 'Formato inválido: "subject", "desc" e "tickets" são obrigatórios'
+      });
+      continue;
+    }
+
+    const existing = await collection.findOne({ subject, desc });
 
     if (existing) {
+      const updatedTickets = { ...existing.tickets };
+
+      for (const id in tickets) {
+        const newConvs = tickets[id];
+        const existingConvs = updatedTickets[id] || [];
+        updatedTickets[id] = Array.from(new Set([...existingConvs, ...newConvs]));
+      }
+
       const updateResult = await collection.updateOne(
         { subject, desc },
-        {
-          $addToSet: {
-            id: { $each: id },
-            conversations: { $each: conversations }
-          }
-        }
+        { $set: { tickets: updatedTickets } }
       );
 
       console.log('📌 Ticket existente atualizado:', updateResult);
       results.push({ subject, desc, action: 'merged into existing ticket' });
     } else {
-      const insertResult = await collection.insertOne({
-        subject,
-        desc,
-        id,
-        conversations
-      });
+      const insertResult = await collection.insertOne({ subject, desc, tickets });
 
       console.log('📌 Novo ticket criado:', insertResult);
       results.push({ subject, desc, action: 'new ticket created' });
