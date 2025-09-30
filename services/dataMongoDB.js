@@ -39,8 +39,11 @@ async function dataMongoDB({
     return acc;
   }, { _id: 0 });
 
-  // 🔍 Filtro genérico
-  const query = filterField && filterValue ? { [filterField]: filterValue } : {};
+  // 🔍 Filtro genérico com conversão de tipo
+  const parsedFilterValue = !isNaN(filterValue) ? Number(filterValue) : filterValue;
+  const query = filterField && filterValue !== undefined
+    ? { [filterField]: parsedFilterValue }
+    : {};
 
   const data = await collection.find(query, { projection }).skip(skip).limit(limit).toArray();
 
