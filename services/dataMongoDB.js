@@ -39,17 +39,20 @@ async function dataMongoDB({
     return acc;
   }, { _id: 0 });
 
-  // 🔍 Filtro genérico com conversão de tipo
+  // ✅ Filtro com suporte a array e conversão de tipos
   let query = {};
-
-if (filterField && filterValue !== undefined) {
-  if (Array.isArray(filterValue)) {
-    query = { [filterField]: { $in: filterValue } };
-  } else {
-    const parsedValue = !isNaN(filterValue) ? Number(filterValue) : filterValue;
-    query = { [filterField]: parsedValue };
-  }}
-
+  if (filterField && filterValue !== undefined) {
+    if (Array.isArray(filterValue)) {
+      // Converte todos os valores para número, se possível
+      const parsedArray = filterValue.map(val => {
+        return !isNaN(val) ? Number(val) : val;
+      });
+      query = { [filterField]: { $in: parsedArray } };
+    } else {
+      const parsedValue = !isNaN(filterValue) ? Number(filterValue) : filterValue;
+      query = { [filterField]: parsedValue };
+    }
+  }
 
   const data = await collection.find(query, { projection }).skip(skip).limit(limit).toArray();
 
