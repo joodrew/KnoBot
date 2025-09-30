@@ -24,9 +24,16 @@ export async function saveResolucao(data) {
 
   if (data.resolução && typeof data.resolução === 'string') {
     data.resolução = decodeHtml(data.resolução);
+  // Verifica se já existe um documento com o mesmo id
+  const existing = await collection.findOne({ id: data.id });
+  if (existing) {
+    console.log(`⚠️ Documento com id ${data.id} já existe. Ignorando inserção.`);
+    await client.close();
+    return { status: 'skipped', inserted: false, reason: 'ID já existente' };
   }
 
   await collection.insertOne(data);
+  console.log(`✅ Documento com id ${data.id} inserido com sucesso.`);
 
   await client.close();
   return { status: 'success', inserted: true };
