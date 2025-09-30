@@ -2,9 +2,9 @@ import { MongoClient } from 'mongodb';
 
 const uri = process.env.MONGODBDUMP_URI;
 const dbName = 'dify';
-const collectionName = 'groupedSubject';
+const defaultCollectionName = 'groupedSubject';
 
-export async function crud(input) {
+export async function crud(input, collectionOverride) {
   if (!uri) {
     throw new Error('MONGODBDUMP_URI não está definido nas variáveis de ambiente');
   }
@@ -14,6 +14,7 @@ export async function crud(input) {
   await client.connect();
 
   const db = client.db(dbName);
+  const collectionName = collectionOverride || defaultCollectionName;
   const collection = db.collection(collectionName);
 
   const results = [];
@@ -28,7 +29,6 @@ export async function crud(input) {
       continue;
     }
 
-    // Normaliza o nome do grupo para minúsculas
     const normalizedGroupName = group.group.toLowerCase();
 
     const existing = await collection.findOne({ group: normalizedGroupName });

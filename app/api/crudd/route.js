@@ -1,26 +1,26 @@
-import { crud } from '@/services/crud';
 import { NextResponse } from 'next/server';
+import { crud } from '@/services/crud';
 
 export async function POST(request) {
   try {
     const body = await request.json();
+    const { data, collection } = body;
 
-    // DEBUG: Verifica se a variável de ambiente está acessível
-    const uri = process.env.MONGODBDUMP_URI;
-    if (!uri) {
-      throw new Error('❌ MONGODBDUMP_URI não está acessível no ambiente Vercel');
+    if (!data || !Array.isArray(data)) {
+      return NextResponse.json(
+        { error: '❌ O campo "data" deve ser um array de grupos.' },
+        { status: 400 }
+      );
     }
 
-    console.log('✅ URI carregada na rota:', uri);
+    const result = await crud(data, collection); // collection é opcional
 
-    const result = await crud(body);
-
-    return NextResponse.json({ success: true, result });
+    return NextResponse.json(result);
   } catch (error) {
-    console.error('❌ Erro na rota /crud:', error);
+    console.error('Erro ao processar requisição:', error);
     return NextResponse.json(
-      { success: false, error: error.message || 'Erro desconhecido' },
-      { status: 400 }
+      { error: '❌ Erro interno ao processar os dados.' },
+      { status: 500 }
     );
   }
 }
