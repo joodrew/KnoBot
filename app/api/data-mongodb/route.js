@@ -1,6 +1,9 @@
 const { NextResponse } = require('next/server');
 const { dataMongoDB } = require('@/services/dataMongoDB');
 
+const { NextResponse } = require('next/server');
+const { dataMongoDB } = require('@/services/dataMongoDB');
+
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const db = searchParams.get('db');
@@ -22,12 +25,11 @@ export async function GET(request) {
 
   const keys = keysParam.split(',').map(k => k.trim()).filter(Boolean);
 
-  // Trata filterValue como array se vier separado por vírgulas
-  const filterValue = rawFilterValue
-    ? rawFilterValue.includes(',')
-      ? rawFilterValue.split(',').map(val => isNaN(val) ? val : Number(val))
-      : isNaN(rawFilterValue) ? rawFilterValue : Number(rawFilterValue)
-    : undefined;
+  let filterValue;
+  if (rawFilterValue) {
+    const values = rawFilterValue.split(',').map(val => val.trim());
+    filterValue = values.map(val => isNaN(val) ? val : Number(val));
+  }
 
   try {
     const result = await dataMongoDB({
@@ -62,7 +64,7 @@ export async function POST(request) {
 
   const filterField = searchParams.get('filterField');
   const body = await request.json();
-  const filterValue = body.filterValue;
+  const rawFilterValue = body.filterValue;
 
   if (!db || !collection || !keysParam) {
     return NextResponse.json(
@@ -72,6 +74,18 @@ export async function POST(request) {
   }
 
   const keys = keysParam.split(',').map(k => k.trim()).filter(Boolean);
+
+  let filterValue;
+  if (rawFilterValue) {
+    if (typeof rawFilterValue === 'string') {
+      const values = rawFilterValue.split(',').map(val => val.trim());
+      filterValue = values.map(val => isNaN(val) ? val : Number(val));
+    } else if (Array.isArray(rawFilterValue)) {
+      filterValue = rawFilterValue.map(val => isNaN(val) ? val : Number(val));
+    } else {
+      filterValue = isNaN(rawFilterValue) ? rawFilterValue : Number(rawFilterValue);
+    }
+  }
 
   try {
     const result = await dataMongoDB({
