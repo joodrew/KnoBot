@@ -9,6 +9,7 @@ export async function crud(input, collectionOverride) {
     throw new Error('MONGODBDUMP_URI não está definido nas variáveis de ambiente');
   }
 
+  const data = Array.isArray(input) ? input : [input];
   const client = new MongoClient(uri);
   await client.connect();
 
@@ -18,38 +19,18 @@ export async function crud(input, collectionOverride) {
 
   const results = [];
 
-  const data = Array.isArray(input) ? input : [input];
-
-  for (const item of data) {
-    // Detecta se é uma resolução técnica (nova LLM)
-    const isResolucao =
-      item &&
-      typeof item === 'object' &&
-      item.resolução &&
-      Array.isArray(item.tags) &&
-      typeof item.subject === 'string';
-
-    if (isResolucao) {
-      try {
-        await collection.insertOne(item);
-        results.push({ subject: item.subject, action: 'resolução inserida' });
-      } catch (err) {
-        results.push({ subject: item.subject, action: 'erro', error: err.message });
-      }
-      continue;
-    }
-
-    // Mantém a lógica original para agrupamento de tickets
-    if (!item.group || !Array.isArray(item.tickets)) {
+  for (const group of data) {
+    if (!group.group || !Array.isArray(group.tickets)) {
       results.push({
-        group: item.group || 'undefined',
+        group: group.group || 'undefined',
         action: 'skipped',
         reason: 'Formato inválido: "group" deve ser string e "tickets" deve ser array'
       });
       continue;
     }
 
-    const normalizedGroupName = item.group.toLowerCase();
+    const normalizedGroupName = group.group.toLowerCase();
+
     const existing = await collection.findOne({ group: normalizedGroupName });
 
     if (existing) {
@@ -57,7 +38,7 @@ export async function crud(input, collectionOverride) {
         { group: normalizedGroupName },
         {
           $addToSet: {
-            tickets: { $each: item.tickets }
+            tickets: { $each: group.tickets }
           }
         }
       );
@@ -65,7 +46,7 @@ export async function crud(input, collectionOverride) {
     } else {
       await collection.insertOne({
         group: normalizedGroupName,
-        tickets: item.tickets
+        tickets: group.tickets
       });
       results.push({ group: normalizedGroupName, action: 'created' });
     }
