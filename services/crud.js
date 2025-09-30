@@ -9,13 +9,33 @@ export async function crud(input, collectionOverride) {
     throw new Error('❌ MONGODBDUMP_URI não está definido nas variáveis de ambiente');
   }
 
-  // Compatibilidade com chamadas antigas que enviavam diretamente um array de tickets
-  if (Array.isArray(input) && input.every(item => item.subject && item.desc)) {
+  let data;
+
+  // Compatibilidade com chamadas antigas que enviavam diretamente um array de agrupamentos
+  if (Array.isArray(input) && input.every(item => item.subject && item.desc && item.tickets)) {
     console.warn('⚠️ Requisição antiga detectada. Adaptando...');
-    input = { group: 'legacy', tickets: input };
+
+    // Converte cada item para o formato esperado
+    data = input.map(item => {
+      const ids = Object.keys(item.tickets);
+      const conversations = ids.flatMap(id => item.tickets[id]);
+
+      return {
+        group: 'legacy',
+        tickets: [
+          {
+            subject: item.subject,
+            desc: item.desc,
+            id: ids,
+            conversations
+          }
+        ]
+      };
+    });
+  } else {
+    data = Array.isArray(input) ? input : [input];
   }
 
-  const data = Array.isArray(input) ? input : [input];
   const client = new MongoClient(uri);
   await client.connect();
 
