@@ -24,17 +24,22 @@ export async function saveResolucao(data) {
 
   if (data.resolução && typeof data.resolução === 'string') {
     data.resolução = decodeHtml(data.resolução);
-  // Verifica se já existe um documento com o mesmo id
-  const existing = await collection.findOne({ id: data.id });
-  if (existing) {
-    console.log(`⚠️ Documento com id ${data.id} já existe. Ignorando inserção.`);
-    await client.close();
-    return { status: 'skipped', inserted: false, reason: 'ID já existente' };
   }
 
-  await collection.insertOne(data);
-  console.log(`✅ Documento com id ${data.id} inserido com sucesso.`);
+  // Atualiza ou insere com base no id
+  const result = await collection.updateOne(
+    { id: data.id },
+    { $set: data },
+    { upsert: true }
+  );
 
   await client.close();
-  return { status: 'success', inserted: true };
+
+  if (result.upsertedCount > 0) {
+    console.log(`✅ Documento com id ${data.id} inserido.`);
+    return { status: 'success', inserted: true };
+  } else {
+    console.log(`🔄 Documento com id ${data.id} atualizado.`);
+    return { status: 'updated', inserted: false };
+  }
 }
