@@ -40,10 +40,16 @@ async function dataMongoDB({
   }, { _id: 0 });
 
   // 🔍 Filtro genérico com conversão de tipo
-  const parsedFilterValue = !isNaN(filterValue) ? Number(filterValue) : filterValue;
-  const query = filterField && filterValue !== undefined
-    ? { [filterField]: parsedFilterValue }
-    : {};
+  let query = {};
+
+if (filterField && filterValue !== undefined) {
+  if (Array.isArray(filterValue)) {
+    query = { [filterField]: { $in: filterValue } };
+  } else {
+    const parsedValue = !isNaN(filterValue) ? Number(filterValue) : filterValue;
+    query = { [filterField]: parsedValue };
+  }}
+
 
   const data = await collection.find(query, { projection }).skip(skip).limit(limit).toArray();
 
