@@ -1,3 +1,4 @@
+// services/crud.js
 import { MongoClient } from 'mongodb';
 
 const uri = process.env.MONGODBDUMP_URI;
@@ -6,7 +7,13 @@ const defaultCollectionName = 'groupedSubject';
 
 export async function crud(input, collectionOverride) {
   if (!uri) {
-    throw new Error('MONGODBDUMP_URI não está definido nas variáveis de ambiente');
+    throw new Error('❌ MONGODBDUMP_URI não está definido nas variáveis de ambiente');
+  }
+
+  // Compatibilidade com chamadas antigas que enviavam diretamente um array de tickets
+  if (Array.isArray(input) && input.every(item => item.subject && item.desc)) {
+    console.warn('⚠️ Requisição antiga detectada. Adaptando...');
+    input = { group: 'legacy', tickets: input };
   }
 
   const data = Array.isArray(input) ? input : [input];
@@ -32,9 +39,8 @@ export async function crud(input, collectionOverride) {
     const normalizedGroupName = group.group.toLowerCase();
 
     for (const ticket of group.tickets) {
-      const { subject, desc, id, conversations } = ticket;
+      const { subject, desc, id = [], conversations = [] } = ticket;
 
-      // Verifica se já existe um ticket com mesmo subject e desc
       const existing = await collection.findOne({
         group: normalizedGroupName,
         tickets: {
@@ -46,8 +52,7 @@ export async function crud(input, collectionOverride) {
       });
 
       if (existing) {
-        // Atualiza o ticket existente adicionando novos IDs e conversas
-        await collection.updateOne(
+        const updateResult = await collection.updateOne(
           {
             group: normalizedGroupName,
             "tickets.subject": subject,
@@ -60,13 +65,14 @@ export async function crud(input, collectionOverride) {
             }
           }
         );
+
+        console.log('📌 Ticket existente atualizado:', updateResult);
         results.push({ group: normalizedGroupName, subject, desc, action: 'merged into existing ticket' });
       } else {
-        // Cria novo grupo ou adiciona novo ticket ao grupo existente
         const groupExists = await collection.findOne({ group: normalizedGroupName });
 
         if (groupExists) {
-          await collection.updateOne(
+          const pushResult = await collection.updateOne(
             { group: normalizedGroupName },
             {
               $push: {
@@ -74,12 +80,16 @@ export async function crud(input, collectionOverride) {
               }
             }
           );
+
+          console.log('📌 Novo ticket adicionado ao grupo existente:', pushResult);
           results.push({ group: normalizedGroupName, subject, desc, action: 'new ticket added to existing group' });
         } else {
-          await collection.insertOne({
+          const insertResult = await collection.insertOne({
             group: normalizedGroupName,
             tickets: [ticket]
           });
+
+          console.log('📌 Novo grupo criado com ticket:', insertResult);
           results.push({ group: normalizedGroupName, subject, desc, action: 'new group created with ticket' });
         }
       }
