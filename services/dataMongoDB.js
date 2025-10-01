@@ -34,12 +34,14 @@ async function dataMongoDB({
   const db = client.db(dbName);
   const collection = db.collection(collectionName);
 
-  const projection = keys.length > 0
+  const projection = Array.isArray(keys) && keys.length > 0
   ? keys.reduce((acc, key) => {
       acc[key] = 1;
       return acc;
     }, { _id: 0 })
-  }
+  : undefined;
+
+  
 
   // ✅ Filtro com suporte a array e conversão de tipos
   let query = {};
