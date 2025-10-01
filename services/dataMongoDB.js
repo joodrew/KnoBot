@@ -17,11 +17,17 @@ async function dataMongoDB({
   dbName,
   collectionName,
   keys,
+  includeId = false,        // ✅ novo
   limit = 100,
   skip = 0,
   useDumpCluster = false,
   filterField,
   filterValue,
+  regex = false,            // ✅ novo
+  regexOptions = 'i',       // ✅ novo
+  search = '',              // ✅ novo
+  searchFields = [],        // ✅ novo
+  escapeRegex = (s) => s,   // ✅ novo (fallback)
 }) {
   const clusterKey = useDumpCluster ? 'dump' : 'main';
   const clientPromise = clientPromises[clusterKey];
@@ -34,23 +40,37 @@ async function dataMongoDB({
   const db = client.db(dbName);
   const collection = db.collection(collectionName);
 
-  const projection = Array.isArray(keys) && keys.length > 0
-  ? keys.reduce((acc, key) => {
+  // ✅ projeção com controle de _id
+  let projection;
+  if (Array.isArray(keys) && keys.length > 0) {
+    projection = keys.reduce((acc, key) => {
       acc[key] = 1;
       return acc;
-    }, { _id: 0 })
-  : undefined;
+    }, {});
+    if (includeId) projection._id = 1; else projection._id = 0;
+  }
 
-  
-
-  // ✅ Filtro com suporte a array e conversão de tipos
+  // ✅ Query
   let query = {};
-  if (filterField && filterValue !== undefined) {
+
+  // 1) Busca multi-campos com regex: /search/i em cada campo da lista
+  if (search && Array.isArray(searchFields) && searchFields.length > 0) {
+    const safe = escapeRegex(search);
+    query = {
+      $or: searchFields.map((f) => ({
+        [f]: { $regex: safe, $options: regexOptions },
+      })),
+    };
+  }
+  // 2) Busca regex em um único campo
+  else if (regex && filterField && typeof filterValue === 'string') {
+    const safe = escapeRegex(filterValue);
+    query = { [filterField]: { $regex: safe, $options: regexOptions } };
+  }
+  // 3) Igualdade / $in (seu comportamento atual)
+  else if (filterField && filterValue !== undefined) {
     if (Array.isArray(filterValue)) {
-      // Converte todos os valores para número, se possível
-      const parsedArray = filterValue.map(val => {
-        return !isNaN(val) ? Number(val) : val;
-      });
+      const parsedArray = filterValue.map(val => (!isNaN(val) ? Number(val) : val));
       query = { [filterField]: { $in: parsedArray } };
     } else {
       const parsedValue = !isNaN(filterValue) ? Number(filterValue) : filterValue;
@@ -58,7 +78,11 @@ async function dataMongoDB({
     }
   }
 
-  const data = await collection.find(query, { projection }).skip(skip).limit(limit).toArray();
+  const data = await collection
+    .find(query, { projection })
+    .skip(skip)
+    .limit(limit)
+    .toArray();
 
   return data;
 }

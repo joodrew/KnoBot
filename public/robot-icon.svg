@@ -1,0 +1,56 @@
+<svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Logo Robo Inteligente">
+  <title>Robo Inteligente - Logo</title>
+  <defs>
+    <style>
+      .stroke {
+        stroke: #fb923c; /* orange-400 */
+        stroke-width: 24;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        fill: none;
+      }
+    </style>
+  </defs>
+
+  <!-- Cabeça (base) -->
+  <path d="M256 420
+           q0 -140 140 -200
+           h232
+           q140 60 140 200
+           v140
+           q0 140 -140 200
+           H396
+           q-140 -60 -140 -200
+           z"
+        fill="#121a26" class="stroke"/>
+
+  <!-- Antena -->
+  <line x1="512" y1="180" x2="512" y2="240" class="stroke"/>
+  <circle cx="512" cy="160" r="24" fill="#fb923c"/>
+
+  <!-- Painéis laterais -->
+  <rect x="230" y="490" width="40" height="100" rx="20"
+        fill="#121a26" stroke="#fb923c" stroke-width="16"/>
+  <rect x="754" y="490" width="40" height="100" rx="20"
+        fill="#121a26" stroke="#fb923c" stroke-width="16"/>
+
+  <!-- Olhos (expressivos = inteligente/atento) -->
+  <ellipse cx="430" cy="520" rx="70" ry="60" fill="#ffffff" stroke="#fb923c" stroke-width="16"/>
+  <ellipse cx="594" cy="520" rx="70" ry="60" fill="#ffffff" stroke="#fb923c" stroke-width="16"/>
+  <circle cx="430" cy="520" r="16" fill="#fb923c"/>
+  <circle cx="594" cy="520" r="16" fill="#fb923c"/>
+
+  <!-- Supercílios (sutilmente arqueados: “esperto/irônico”) -->
+  <path d="M360 450 q70 -40 140 -40" class="stroke"/>
+  <path d="M524 410 q70 0 140 40" class="stroke"/>
+
+  <!-- Boca (sorriso contido/confiante) -->
+  <path d="M400 640 q56 40 112 40 q56 0 112 -40" class="stroke"/>
+
+  <!-- Motivo “cérebro/circuito” (inteligência) -->
+  <path d="M430 360 q40 -20 82 -20 q42 0 82 20" class="stroke"/>
+  <path d="M390 380 h244" class="stroke"/>
+  <circle cx="430" cy="380" r="8" fill="#ffffff"/>
+  <circle cx="512" cy="380" r="8" fill="#ffffff"/>
+  <circle cx="634" cy="380" r="8" fill="#ffffff"/>
+</svg>

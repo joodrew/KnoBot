@@ -38,7 +38,7 @@ export default function Navbar() {
               </Link>
             ) : (
               <Link href="/" className="text-orange-400 hover:text-orange-500 transition" title="Voltar para o início">
-                <img src="/robot-icon.png" alt="KnoBot" className="w-10 h-10 object-contain" />
+                <img src="/robot-icon.svg" alt="KnoBot" className="w-15 h-15 object-contain" />
               </Link>
             )}
           </div>
@@ -63,9 +63,9 @@ export default function Navbar() {
                 <Link href="/tickets" title="Chamados" className="text-white p-2 rounded hover:text-orange-400 transition flex items-center">
                   <LocalActivityIcon fontSize="small" />
                 </Link>
-                <Link href="/chat" title="Chat" className="text-white p-2 rounded hover:text-orange-400 transition flex items-center">
+                <span title="Chat" className="text-gray-500 p-2 rounded cursor-not-allowed flex items-center">
                   <ChatIcon fontSize="small" />
-                </Link>
+                </span>
                 <div title="Configurações" className="text-gray-500 p-2 rounded cursor-not-allowed flex items-center">
                   <SettingsIcon fontSize="small" />
                 </div>
@@ -86,10 +86,10 @@ export default function Navbar() {
             <LocalActivityIcon fontSize="small" />
             <span>Chamados</span>
           </Link>
-          <Link href="/chat" className="flex items-center gap-2 text-white hover:text-orange-400 transition" onClick={() => setMenuOpen(false)}>
+          <span className="flex items-center gap-2 text-gray-500 cursor-not-allowed" >
             <ChatIcon fontSize="small" />
             <span>Chat</span>
-          </Link>
+          </span>
           <div className="flex items-center gap-2 text-gray-500 cursor-not-allowed">
             <SettingsIcon fontSize="small" />
             <span>Configurações</span>
