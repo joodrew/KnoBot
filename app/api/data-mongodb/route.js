@@ -36,14 +36,18 @@ async function handleRequest(request, method) {
     rawFilterValue = searchParams.get('filterValue');
   }
 
-  if (!db || !collection || !keysParam) {
+  if (!db || !collection) {
     return NextResponse.json(
-      { error: '❌ Parâmetros db, collection e keys são obrigatórios.' },
+      { error: '❌ Parâmetros db e collection são obrigatórios.' },
       { status: 400 }
     );
   }
 
-  const keys = keysParam.split(',').map(k => k.trim()).filter(Boolean);
+  // Se keys não for informado, retorna todos os campos
+  const keys = keysParam
+    ? keysParam.split(',').map(k => k.trim()).filter(Boolean)
+    : [];
+
   const filterValue = parseFilterValue(rawFilterValue);
 
   try {
