@@ -16,10 +16,11 @@ export async function crud(input, collectionOverride) {
 
   let items = [];
 
-  // Parse do input
+  // Sanitização e parse do input
   if (typeof input === 'string') {
     try {
-      const parsed = JSON.parse(input);
+      const cleaned = input.trim().replace(/^json\s*/i, '');
+      const parsed = JSON.parse(cleaned);
       items = Array.isArray(parsed) ? parsed : parsed.data || [];
     } catch (err) {
       throw new Error('❌ Erro ao fazer parse do JSON');
