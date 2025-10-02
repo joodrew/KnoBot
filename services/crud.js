@@ -41,17 +41,21 @@ export async function crud(input, collectionOverride) {
   if (!group.tickets || !Array.isArray(group.tickets)) continue;
 
   for (const ticket of group.tickets) {
-    const { subject, desc, id, conversations } = ticket;
+    
+const { subject, desc, id, tickets: ticketIdsAlt, conversations } = ticket;
 
-    if (!subject || !desc || !id ) {
-      results.push({
-        subject: subject || 'undefined',
-        desc: desc || 'undefined',
-        action: 'skipped',
-        reason: 'Formato inválido: "subject", "desc", "id" são obrigatórios'
-      });
-      continue;
-    }
+const ticketIds = Array.isArray(id) ? id : Array.isArray(ticketIdsAlt) ? ticketIdsAlt : null;
+
+if (!subject || !desc || !ticketIds) {
+  results.push({
+    subject: subject || 'undefined',
+    desc: desc || 'undefined',
+    action: 'skipped',
+    reason: 'Formato inválido: "subject", "desc", e "id"/"tickets" são obrigatórios'
+  });
+  continue;
+}
+
 
     const tickets = {};
     for (let i = 0; i < id.length; i++) {
