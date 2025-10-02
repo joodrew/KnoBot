@@ -33,49 +33,53 @@ export async function crud(input, collectionOverride) {
     items = [input];
   }
 
-  for (const group of items) {
-    if (!group.tickets || !Array.isArray(group.tickets)) continue;
+ for (const group of items) {
+  const groupName = group.group?.toUpperCase(); // "TRATADO" ou "RETRATAR"
+  const collectionName = collectionOverride || (groupName === 'RETRATAR' ? 'groupedRetratar' : 'groupedSubject');
+  const collection = db.collection(collectionName);
 
-    for (const ticket of group.tickets) {
-      const { subject, desc, id, conversations } = ticket;
+  if (!group.tickets || !Array.isArray(group.tickets)) continue;
 
-      if (!subject || !desc || !id || !conversations) {
-        results.push({
-          subject: subject || 'undefined',
-          desc: desc || 'undefined',
-          action: 'skipped',
-          reason: 'Formato inválido: "subject", "desc", "id" e "conversations" são obrigatórios'
-        });
-        continue;
+  for (const ticket of group.tickets) {
+    const { subject, desc, id, conversations } = ticket;
+
+    if (!subject || !desc || !id || !conversations) {
+      results.push({
+        subject: subject || 'undefined',
+        desc: desc || 'undefined',
+        action: 'skipped',
+        reason: 'Formato inválido: "subject", "desc", "id" e "conversations" são obrigatórios'
+      });
+      continue;
+    }
+
+    const tickets = {};
+    for (let i = 0; i < id.length; i++) {
+      tickets[id[i]] = i === 0 ? conversations : [];
+    }
+
+    const existing = await collection.findOne({ subject, desc });
+
+    if (existing) {
+      const updatedTickets = { ...existing.tickets };
+      for (const ticketId in tickets) {
+        const newConvs = tickets[ticketId];
+        const existingConvs = updatedTickets[ticketId] || [];
+        updatedTickets[ticketId] = Array.from(new Set([...existingConvs, ...newConvs]));
       }
 
-      const tickets = {};
-      for (let i = 0; i < id.length; i++) {
-        tickets[id[i]] = i === 0 ? conversations : [];
-      }
+      await collection.updateOne(
+        { subject, desc },
+        { $set: { tickets: updatedTickets } }
+      );
 
-      const existing = await collection.findOne({ subject, desc });
-
-      if (existing) {
-        const updatedTickets = { ...existing.tickets };
-        for (const ticketId in tickets) {
-          const newConvs = tickets[ticketId];
-          const existingConvs = updatedTickets[ticketId] || [];
-          updatedTickets[ticketId] = Array.from(new Set([...existingConvs, ...newConvs]));
-        }
-
-        await collection.updateOne(
-          { subject, desc },
-          { $set: { tickets: updatedTickets } }
-        );
-
-        results.push({ subject, desc, action: 'merged into existing ticket' });
-      } else {
-        await collection.insertOne({ subject, desc, tickets });
-        results.push({ subject, desc, action: 'new ticket created' });
-      }
+      results.push({ subject, desc, action: 'merged into existing ticket', group: groupName });
+    } else {
+      await collection.insertOne({ subject, desc, tickets });
+      results.push({ subject, desc, action: 'new ticket created', group: groupName });
     }
   }
+}
 
   await client.close();
   return results;
