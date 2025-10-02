@@ -1,5 +1,5 @@
 export function normalizeChamado(raw = {}) {
-  const empresaNome = raw['Nome da empresa'] || raw.empresa || 'Sem empresa';
+  const empresaNomeRaw = raw['Nome da empresa'] || raw.empresa || 'Sem empresa';
   const logoUrl = raw.logo || raw['logo'] || null;
 
   // Função para gerar cor baseada no nome
@@ -12,15 +12,19 @@ export function normalizeChamado(raw = {}) {
     return `hsl(${hue}, 70%, 50%)`; // cor vibrante e legível
   }
 
-  // Fallback visual para logo
+  // Garantir que empresaNome seja uma string segura
+  const nome = typeof empresaNomeRaw === 'string'
+    ? empresaNomeRaw
+    : String(empresaNomeRaw ?? 'Sem empresa');
+
   const fallbackLogo = {
-    letra: empresaNome.charAt(0).toUpperCase(),
-    cor: stringToColor(empresaNome),
+    letra: nome.length > 0 ? nome.charAt(0).toUpperCase() : '?',
+    cor: stringToColor(nome),
   };
 
   return {
     id: raw?._id?.toString?.() || raw?._id,
-    empresaNome,
+    empresaNome: nome,
     empresaLogo: logoUrl || fallbackLogo, // ✅ pode ser string ou objeto
     dominios: raw['Domínios para esta empresa']
       ? raw['Domínios para esta empresa'].split(',').map((d) => d.trim())
