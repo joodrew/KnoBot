@@ -11,7 +11,6 @@ export async function crud(input, collectionOverride) {
 
   const client = new MongoClient(uri);
   await client.connect();
-
   const db = client.db(dbName);
   const results = [];
 
@@ -23,7 +22,7 @@ export async function crud(input, collectionOverride) {
       const parsed = JSON.parse(input);
       items = Array.isArray(parsed) ? parsed : parsed.data || [];
     } catch (err) {
-      throw new Error('❌ Erro ao fazer parse do JSON retornado pela LLM');
+      throw new Error('❌ Erro ao fazer parse do JSON');
     }
   } else if (Array.isArray(input)) {
     items = input;
@@ -34,13 +33,17 @@ export async function crud(input, collectionOverride) {
   }
 
   for (const item of items) {
-    const groupName = item.group?.toUpperCase(); // "TRATADO" ou "RETRATAR"
-    const collectionName = collectionOverride || (groupName === 'RETRATAR' ? 'groupedRetratar' : defaultCollectionName);
+    // Detecta se é formato com "group" ou direto com "subject"
+    const isGrouped = item.group && Array.isArray(item.tickets);
+    const groupName = item.group?.toUpperCase();
+    const collectionName = collectionOverride || (
+      isGrouped
+        ? (groupName === 'RETRATAR' ? 'groupedRetratar' : defaultCollectionName)
+        : defaultCollectionName
+    );
     const collection = db.collection(collectionName);
 
-    const ticketsArray = item.tickets && Array.isArray(item.tickets)
-      ? item.tickets
-      : (!item.group && item.subject && item.desc ? [item] : []);
+    const ticketsArray = isGrouped ? item.tickets : [item];
 
     for (const ticket of ticketsArray) {
       const { subject, desc, id, tickets: ticketIdsAlt, conversations } = ticket;
@@ -71,15 +74,11 @@ export async function crud(input, collectionOverride) {
           updatedTickets[ticketId] = Array.from(new Set([...existingConvs, ...newConvs]));
         }
 
-        await collection.updateOne(
-          { subject, desc },
-          { $set: { tickets: updatedTickets } }
-        );
-
-        results.push({ subject, desc, action: 'merged into existing ticket', group: groupName });
+        await collection.updateOne({ subject, desc }, { $set: { tickets: updatedTickets } });
+        results.push({ subject, desc, action: 'merged into existing ticket', group: groupName || 'N/A' });
       } else {
         await collection.insertOne({ subject, desc, tickets });
-        results.push({ subject, desc, action: 'new ticket created', group: groupName });
+        results.push({ subject, desc, action: 'new ticket created', group: groupName || 'N/A' });
       }
     }
   }
