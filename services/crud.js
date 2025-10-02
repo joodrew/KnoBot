@@ -43,12 +43,12 @@ export async function crud(input, collectionOverride) {
   for (const ticket of group.tickets) {
     const { subject, desc, id, conversations } = ticket;
 
-    if (!subject || !desc || !id || !conversations) {
+    if (!subject || !desc || !id ) {
       results.push({
         subject: subject || 'undefined',
         desc: desc || 'undefined',
         action: 'skipped',
-        reason: 'Formato inválido: "subject", "desc", "id" e "conversations" são obrigatórios'
+        reason: 'Formato inválido: "subject", "desc", "id" são obrigatórios'
       });
       continue;
     }
