@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/carousel";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useMemo } from "react";
+import LogoEmpresa from "@/components/LogoEmpresa"; // ✅ componente separado
 
 export default function EmpresaCarousel({ empresas = [], q = '', selectedEmpresa = '' }) {
   const router = useRouter();
@@ -19,7 +20,6 @@ export default function EmpresaCarousel({ empresas = [], q = '', selectedEmpresa
 
   const handleClick = (nome) => {
     const params = new URLSearchParams(searchParams.toString());
-    // Toggle: se já estiver selecionada, remove; senão, seleciona
     if (selectedEmpresa && selectedEmpresa.toLowerCase() === nome.toLowerCase()) {
       params.delete('empresa');
     } else {
@@ -40,10 +40,9 @@ export default function EmpresaCarousel({ empresas = [], q = '', selectedEmpresa
     <div className="py-8 px-4 rounded">
       <div className="mb-2 flex items-center justify-between">
         <h2 className="text-2xl font-bold text-orange-400">{titulo}</h2>
-        {/* Botão para limpar filtro de empresa quando ativo */}
         {selectedEmpresa ? (
           <button
-            onClick={() => handleClick(selectedEmpresa)} // toggle off
+            onClick={() => handleClick(selectedEmpresa)}
             className="text-xs px-3 py-1 rounded border border-orange-400 text-orange-400 hover:bg-orange-500/10 transition"
           >
             Limpar filtro
@@ -73,10 +72,10 @@ export default function EmpresaCarousel({ empresas = [], q = '', selectedEmpresa
                       isActive ? "ring-2 ring-orange-400" : "hover:shadow-md",
                     ].join(' ')}
                   >
-                    <div
-                      className="m-3 flex-[1.2] bg-center bg-no-repeat bg-contain"
-                      style={{ backgroundImage: `url(${empresa.logo || ''})` }}
-                    />
+                    <div className="h-20 flex items-center justify-center">
+                      <LogoEmpresa nome={empresa.nome} logo={empresa.logo} />
+                    </div>
+
                     <div className="border-t-[1.5px] border-orange-400" />
                     <div className="flex-[0.8] bg-gray-500 bg-opacity-80 p-2 text-center">
                       <h3 className="text-lg text-orange-400 font-semibold truncate">

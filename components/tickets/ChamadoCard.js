@@ -1,14 +1,12 @@
 'use client';
 
 import ChamadoModal from "../tickets/ChamadoModal";
+import LogoEmpresa from "@/components/LogoEmpresa"; // ✅ componente reutilizável
 
 export default function ChamadoCard({ chamado }) {
-  const titulo =
-    chamado.empresaNome || chamado.processo || chamado.subject || 'Sem título';
+ const titulo = chamado.subject || chamado.processo || 'Sem título';
+const subtitulo = chamado.desc || chamado.problema || '';
 
-  // 👇 prioriza `desc` como você pediu
-  const subtitulo =
-    chamado.desc || chamado.problema || chamado.subject || '';
 
   const tags = Array.isArray(chamado.tags) ? chamado.tags.slice(0, 3) : [];
   const dominio = Array.isArray(chamado.dominios) && chamado.dominios.length > 0
@@ -54,18 +52,9 @@ export default function ChamadoCard({ chamado }) {
             </div>
           </div>
 
-          {/* Direita: logo ou placeholder */}
+          {/* Direita: logo ou fallback visual */}
           <div className="shrink-0">
-            {chamado.empresaLogo ? (
-              <img
-                src={chamado.empresaLogo}
-                alt={chamado.empresaNome || 'Logo'}
-                className="h-10 w-10 rounded object-contain bg-white p-1 border border-orange-200"
-                onClick={(e) => e.stopPropagation()}
-              />
-            ) : (
-              <div className="h-10 w-10 bg-orange-400 rounded-md" />
-            )}
+            <LogoEmpresa nome={chamado.empresaNome} logo={chamado.empresaLogo} />
           </div>
         </div>
       </ChamadoModal>

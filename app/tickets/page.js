@@ -1,15 +1,15 @@
-// app/tickets/page.js
 import EmpresaCarousel from '@/components/tickets/EmpresaCarousel';
 import ChamadoList from '@/components/tickets/ChamadoList';
+import LoadingFallback from '@/components/LoadingFallback';
 import { headers } from 'next/headers';
+import { normalizeChamado } from '@/services/normalizeChamado';
 
-export const revalidate = 0; // sem cache SSG nesta página
+export const revalidate = 0;
 
 export default async function TicketsPage({ searchParams }) {
   const q = (searchParams?.q || '').trim();
-  const empresa = (searchParams?.empresa || '').trim(); // 👈 filtro por empresa
+  const empresa = (searchParams?.empresa || '').trim();
 
-  // Monta URL absoluta da API (server-side)
   const hdrs = headers();
   const host = hdrs.get('host');
   const protocol = process.env.NODE_ENV === 'development' ? 'http' : 'https';
@@ -19,22 +19,21 @@ export default async function TicketsPage({ searchParams }) {
     collection: 'resolucao',
     includeId: 'true',
     dump: 'true',
-    limit: '100', // pode ajustar
-    // Campos que precisamos (inclui desc, resoluções e logo)
+    limit: '100',
     keys: [
       '_id',
       'processo',
       'problema',
       'subject',
       'empresa',
+      'Nome da empresa',
       'desc',
-      'resolucao',   // RAW (texto/HTML)
-      'resolução',   // HTML com acento
-      'logo',        // 👈 para o carousel e card/modal
+      'resolucao',
+      'resolução',
+      'logo',
     ].join(','),
   });
 
-  // Busca textual multi-campos
   if (q) {
     params.set('regex', 'true');
     params.set('regexOptions', 'i');
@@ -44,14 +43,12 @@ export default async function TicketsPage({ searchParams }) {
       'processo',
       'subject',
       'desc',
-      'resolucao',   // busca em conteúdo de resumo (raw)
-      // 'resolução', // opcional (pode ser pesado por ser HTML)
+      'resolucao',
     ].join(','));
   }
 
-  // Filtro por empresa (igualdade)
   if (empresa) {
-    params.set('filterField', 'empresa');
+    params.set('filterField', 'Nome da empresa');
     params.set('filterValue', empresa);
   }
 
@@ -69,62 +66,57 @@ export default async function TicketsPage({ searchParams }) {
   const data = await res.json();
   const chamadosRaw = Array.isArray(data) ? data : [];
 
-  // Normaliza: garante resoluções e _id em string
-  const chamados = chamadosRaw.map((d) => ({
-    ...d,
-    _id: d?._id?.toString?.() || d?._id,
-    resolucaoHtml: d['resolução'] ?? d.resolucaoHtml ?? null,
-    resolucaoRaw: d.resolucao ?? d.resolucaoRaw ?? null,
-  }));
+  if (!chamadosRaw.length) {
+    return <LoadingFallback />; // ✅ mostra enquanto carrega ou se estiver vazio
+  }
 
-  // -----------------------------
-  // Garantia de filtros (fallback local se sua API não combinar empresa + q)
-  // -----------------------------
+  const chamados = chamadosRaw.map(normalizeChamado);
+
   const matchesQ = (item, query) => {
     if (!query) return true;
     const hay = [
-      item.processo, item.problema, item.subject, item.desc, item.resolucaoRaw,
+      item.processo,
+      item.problema,
+      item.subject,
+      item.desc,
+      item.resolucaoRaw,
     ].filter(Boolean).join(' ').toLowerCase();
     return hay.includes(query.toLowerCase());
   };
 
   const matchesEmpresa = (item, emp) => {
     if (!emp) return true;
-    return (item.empresa || '').toLowerCase() === emp.toLowerCase();
+    return (item.empresaNome || '').toLowerCase() === emp.toLowerCase();
   };
 
-  // Conjunto para CARDS: aplica ambos filtros (empresa + q)
-  const chamadosFiltrados = chamados.filter(ch => matchesEmpresa(ch, empresa) && matchesQ(ch, q));
+  const chamadosFiltrados = chamados.filter(
+    (ch) => matchesEmpresa(ch, empresa) && matchesQ(ch, q)
+  );
 
-  // Conjunto para CAROUSEL: aplica SOMENTE o filtro de q (para listar outras empresas que batem com a busca)
-  const chamadosParaCarousel = chamados.filter(ch => matchesQ(ch, q));
+  const chamadosParaCarousel = chamados.filter((ch) => matchesQ(ch, q));
 
-  // -----------------------------
-  // Monta dados de empresas (nome, logo, count) a partir do banco
-  // -----------------------------
   const empresasMap = new Map();
   for (const d of chamadosParaCarousel) {
-    const nome = d.empresa || 'Sem empresa';
+    const nome = d.empresaNome || 'Sem empresa';
+    const logo = d.empresaLogo || '';
+
     if (!empresasMap.has(nome)) {
       empresasMap.set(nome, {
         nome,
-        logo: d.logo || '', // pega a primeira logo encontrada
+        logo,
         count: 0,
       });
     }
+
     const e = empresasMap.get(nome);
     e.count += 1;
-    if (!e.logo && d.logo) e.logo = d.logo; // preenche se vier depois
+    if (!e.logo && logo) e.logo = logo;
   }
   const empresas = [...empresasMap.values()];
 
   return (
     <div className="p-4 space-y-6">
-      <EmpresaCarousel
-        empresas={empresas} // 👈 vindo do banco, nada estático
-        q={q}
-        selectedEmpresa={empresa}
-      />
+      <EmpresaCarousel empresas={empresas} q={q} selectedEmpresa={empresa} />
       <ChamadoList chamados={chamadosFiltrados} />
     </div>
   );

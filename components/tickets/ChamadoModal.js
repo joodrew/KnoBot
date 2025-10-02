@@ -11,24 +11,22 @@ import {
 } from "@/components/ui/dialog";
 import { X } from "lucide-react";
 import { useMemo } from "react";
-import DOMPurify from "isomorphic-dompurify"; // npm i isomorphic-dompurify
+import DOMPurify from "isomorphic-dompurify";
+import LogoEmpresa from "@/components/LogoEmpresa"; // ✅ componente reutilizável
 
 export default function ChamadoModal({ chamado, children }) {
-  const titulo =
-    chamado?.empresaNome || chamado?.processo || chamado?.subject || "Detalhes do chamado";
-
-  const subtitulo = chamado?.desc || chamado?.problema || chamado?.subject || "";
+  const titulo = chamado?.subject || chamado?.processo || "Detalhes do chamado";
+const subtitulo = chamado?.desc || chamado?.problema || "";
 
   const logo = chamado?.empresaLogo || null;
+  const nomeEmpresa = chamado?.empresaNome || "—";
   const dominios = Array.isArray(chamado?.dominios) ? chamado.dominios : [];
   const tags = Array.isArray(chamado?.tags) ? chamado.tags : [];
 
-  // Detecta se um texto parece ser HTML
   function looksLikeHtml(s = "") {
     return typeof s === "string" && /<\/?[a-z][\s\S]*>/i.test(s);
   }
 
-  // 1) HTML vindo de "resolução" (acentuado)
   const safeHtmlPrimary = useMemo(() => {
     const raw = chamado?.resolucaoHtml || "";
     if (!raw) return "";
@@ -39,7 +37,6 @@ export default function ChamadoModal({ chamado, children }) {
     }
   }, [chamado?.resolucaoHtml]);
 
-  // 2) Se "resolucaoRaw" for HTML, sanitiza e usa como fallback HTML
   const safeHtmlFromRaw = useMemo(() => {
     const raw = chamado?.resolucaoRaw || "";
     if (!raw || !looksLikeHtml(raw)) return "";
@@ -50,32 +47,21 @@ export default function ChamadoModal({ chamado, children }) {
     }
   }, [chamado?.resolucaoRaw]);
 
-  // Escolha final de conteúdo HTML
   const contentHtml = safeHtmlPrimary || safeHtmlFromRaw;
 
   return (
     <Dialog>
       <DialogTrigger asChild>{children}</DialogTrigger>
 
-      <DialogContent className="max-w-md bg-[var(--footer-bg)] text-white rounded-lg shadow-lg border-[2px] border-orange-400">
-        {/* Topo: logo + nome da empresa à esquerda e X à direita */}
+      <DialogContent className="w-full max-w-screen-xl bg-[var(--footer-bg)] text-white rounded-lg shadow-lg border-[2px] border-orange-400 overflow-y-auto max-h-[90vh] px-6 py-4">
+        {/* Topo: logo + nome da empresa à esquerda */}
         <div className="flex justify-between items-center mb-4">
           <div className="flex items-center gap-2">
-  {logo ? (
-    <img
-      src={logo}
-      alt={chamado?.empresaNome || "Logo"}
-      className="h-8 w-8 rounded object-contain bg-white p-1 border border-orange-200"
-    />
-  ) : (
-    <div className="h-8 w-8 bg-orange-400 rounded-md" />
-  )}
-  <span className="text-orange-400 font-semibold">
-    {chamado?.empresaNome || "—"}
-  </span>
-</div>
-
-          
+            <LogoEmpresa nome={nomeEmpresa} logo={logo} />
+            <span className="text-orange-400 font-semibold">
+              {nomeEmpresa}
+            </span>
+          </div>
         </div>
 
         {/* Título e subtítulo */}
@@ -129,18 +115,15 @@ export default function ChamadoModal({ chamado, children }) {
           </label>
 
           {contentHtml ? (
-            // Preferimos HTML sanitizado (resolução) se houver
             <div
               className="bg-gray-200 rounded-md p-3 text-sm text-black border border-orange-400 prose max-w-none"
               dangerouslySetInnerHTML={{ __html: contentHtml }}
             />
           ) : chamado?.resolucaoRaw ? (
-            // Senão, mostramos o raw (texto puro), preservando quebras de linha
             <div className="bg-gray-200 rounded-md p-3 text-sm text-black border border-orange-400 whitespace-pre-wrap">
               {chamado.resolucaoRaw}
             </div>
           ) : (
-            // Fallback final: subtítulo ou mensagem
             <div className="bg-gray-200 rounded-md p-3 text-sm text-black border border-orange-400 text-center">
               {subtitulo || "Sem informações adicionais."}
             </div>
