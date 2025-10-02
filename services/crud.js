@@ -17,7 +17,7 @@ export async function crud(input, collectionOverride) {
 
   let items = [];
 
-  // Se for uma string JSON (como vem da LLM), faz o parse
+  // Parse do input
   if (typeof input === 'string') {
     try {
       const parsed = JSON.parse(input);
@@ -33,14 +33,16 @@ export async function crud(input, collectionOverride) {
     items = [input];
   }
 
-  for (const group of items) {
-    const groupName = group.group?.toUpperCase(); // "TRATADO" ou "RETRATAR"
+  for (const item of items) {
+    const groupName = item.group?.toUpperCase(); // "TRATADO" ou "RETRATAR"
     const collectionName = collectionOverride || (groupName === 'RETRATAR' ? 'groupedRetratar' : defaultCollectionName);
     const collection = db.collection(collectionName);
 
-    if (!group.tickets || !Array.isArray(group.tickets)) continue;
+    const ticketsArray = item.tickets && Array.isArray(item.tickets)
+      ? item.tickets
+      : (!item.group && item.subject && item.desc ? [item] : []);
 
-    for (const ticket of group.tickets) {
+    for (const ticket of ticketsArray) {
       const { subject, desc, id, tickets: ticketIdsAlt, conversations } = ticket;
       const ticketIds = Array.isArray(id) ? id : Array.isArray(ticketIdsAlt) ? ticketIdsAlt : null;
 
