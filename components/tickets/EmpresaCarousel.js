@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   Carousel,
@@ -8,26 +8,36 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useMemo } from "react";
-import LogoEmpresa from "@/components/LogoEmpresa"; // ✅ componente separado
+import { useMemo, useState, useEffect } from "react";
+import LogoEmpresa from "@/components/LogoEmpresa";
+import LoadingFallback from "@/components/LoadingFallback";
 
 export default function EmpresaCarousel({ empresas = [], q = '', selectedEmpresa = '' }) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const [loadingEmpresa, setLoadingEmpresa] = useState(false);
 
   const itens = Array.isArray(empresas) ? empresas : [];
 
   const handleClick = (nome) => {
+    setLoadingEmpresa(true);
+
     const params = new URLSearchParams(searchParams.toString());
     if (selectedEmpresa && selectedEmpresa.toLowerCase() === nome.toLowerCase()) {
       params.delete('empresa');
     } else {
       params.set('empresa', nome);
     }
+
     const qs = params.toString();
     router.push(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
   };
+
+  useEffect(() => {
+    // Desativa o loading assim que o filtro muda
+    setLoadingEmpresa(false);
+  }, [selectedEmpresa]);
 
   const titulo = useMemo(() => {
     if (q && !selectedEmpresa) return `Empresas com resultados para “${q}”`;
@@ -76,8 +86,8 @@ export default function EmpresaCarousel({ empresas = [], q = '', selectedEmpresa
                       <LogoEmpresa nome={empresa.nome} logo={empresa.logo} />
                     </div>
 
-                    <div className="border-t-[1.5px] border-orange-400" />
-                    <div className="flex-[0.8] bg-gray-500 bg-opacity-80 p-2 text-center">
+                    <div className="border-t-[1.5px]  border-orange-400" />
+                    <div className="flex-[0.8] border-b-[1.5px] border-orange-400  bg-gray-500 bg-opacity-80 p-2 text-center">
                       <h3 className="text-lg text-orange-400 font-semibold truncate">
                         {empresa.nome}
                       </h3>
@@ -96,6 +106,8 @@ export default function EmpresaCarousel({ empresas = [], q = '', selectedEmpresa
           <CarouselNext className="absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-orange-400 text-white rounded-full p-2 shadow hover:bg-orange-500 transition" />
         </Carousel>
       )}
+
+      {loadingEmpresa && <LoadingFallback />}
     </div>
   );
 }

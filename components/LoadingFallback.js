@@ -1,16 +1,10 @@
-// components/LoadingFallback.jsx
+import { createPortal } from "react-dom";
+
 export default function LoadingFallback() {
-  return (
-    <div className="p-4 space-y-4 animate-pulse">
-      <div className="h-6 w-1/3 bg-orange-300 rounded" />
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        {Array.from({ length: 6 }).map((_, i) => (
-          <div
-            key={i}
-            className="h-40 bg-gray-300 rounded shadow"
-          />
-        ))}
-      </div>
-    </div>
+  return createPortal(
+    <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center">
+      <div className="w-10 h-10 border-4 border-orange-400 border-t-transparent rounded-full animate-spin" />
+    </div>,
+    document.body
   );
 }
