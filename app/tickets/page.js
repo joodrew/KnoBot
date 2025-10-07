@@ -1,18 +1,18 @@
 import EmpresaCarousel from '@/components/tickets/EmpresaCarousel';
 import ChamadoList from '@/components/tickets/ChamadoList';
-import LoadingFallback from '@/components/LoadingFallback';
 import { headers } from 'next/headers';
 import { normalizeChamado } from '@/services/normalizeChamado';
+import EmptyState from '@/components/tickets/EmptyState';
 
 export const revalidate = 0;
 
 export default async function TicketsPage({ searchParams }) {
-  const q = (searchParams?.q || '').trim();
-  const empresa = (searchParams?.empresa || '').trim();
-
-  const hdrs = headers();
+  const hdrs = await headers(); // ✅ await necessário
   const host = hdrs.get('host');
   const protocol = process.env.NODE_ENV === 'development' ? 'http' : 'https';
+
+  const q = (searchParams?.q || '').trim(); // ✅ corrigido
+  const empresa = (searchParams?.empresa || '').trim();
 
   const params = new URLSearchParams({
     db: 'dify',
@@ -66,8 +66,10 @@ export default async function TicketsPage({ searchParams }) {
   const data = await res.json();
   const chamadosRaw = Array.isArray(data) ? data : [];
 
-  if (!chamadosRaw.length) {
-    return <LoadingFallback />; // ✅ mostra enquanto carrega ou se estiver vazio
+  
+if (!chamadosRaw.length) {
+  return <EmptyState />;
+
   }
 
   const chamados = chamadosRaw.map(normalizeChamado);
@@ -112,6 +114,7 @@ export default async function TicketsPage({ searchParams }) {
     e.count += 1;
     if (!e.logo && logo) e.logo = logo;
   }
+
   const empresas = [...empresasMap.values()];
 
   return (

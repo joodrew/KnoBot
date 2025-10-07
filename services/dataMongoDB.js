@@ -17,17 +17,17 @@ async function dataMongoDB({
   dbName,
   collectionName,
   keys,
-  includeId = false,        // ✅ novo
+  includeId = false,        
   limit = 100,
   skip = 0,
   useDumpCluster = false,
   filterField,
   filterValue,
-  regex = false,            // ✅ novo
-  regexOptions = 'i',       // ✅ novo
-  search = '',              // ✅ novo
-  searchFields = [],        // ✅ novo
-  escapeRegex = (s) => s,   // ✅ novo (fallback)
+  regex = false,            
+  regexOptions = 'i',       
+  search = '',              
+  searchFields = [],        
+  escapeRegex = (s) => s,   
 }) {
   const clusterKey = useDumpCluster ? 'dump' : 'main';
   const clientPromise = clientPromises[clusterKey];

@@ -1,0 +1,2142 @@
+app:
+  description: Este agente inteligente analisa chamados técnicos armazenados no MongoDB,
+    agrupa os semelhantes e sugere a melhor solução com base nas anotações anteriores.
+  icon: 🤖
+  icon_background: '#FFEAD5'
+  mode: workflow
+  name: Knobot - Agrupador de Chamados
+  use_icon_as_answer_icon: false
+dependencies:
+- current_identifier: null
+  type: marketplace
+  value:
+    marketplace_plugin_unique_identifier: langgenius/mistralai:0.0.4@4684c02e639dc144cb36da33bb0ae7e69ec6996c63d2a6f157f8f3264bbc24bc
+    version: null
+kind: app
+version: 0.4.0
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload:
+      allowed_file_extensions:
+      - .JPG
+      - .JPEG
+      - .PNG
+      - .GIF
+      - .WEBP
+      - .SVG
+      allowed_file_types:
+      - image
+      allowed_file_upload_methods:
+      - local_file
+      - remote_url
+      enabled: false
+      fileUploadConfig:
+        audio_file_size_limit: 50
+        batch_count_limit: 5
+        file_size_limit: 15
+        image_file_size_limit: 10
+        video_file_size_limit: 100
+        workflow_file_upload_limit: 10
+      image:
+        enabled: false
+        number_limits: 3
+        transfer_methods:
+        - local_file
+        - remote_url
+      number_limits: 3
+    opening_statement: ''
+    retriever_resource:
+      enabled: true
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions: []
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1759074948508'
+        sourceType: http-request
+        targetType: code
+      id: 1759075135019-source-1759075346139-target
+      selected: false
+      source: '1759075135019'
+      sourceHandle: source
+      target: '1759075346139'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1759074948508'
+        sourceType: llm
+        targetType: http-request
+      id: 1759075427186-source-1759075526386-target
+      selected: false
+      source: '1759075427186'
+      sourceHandle: source
+      target: '1759075526386'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1759074948508'
+        sourceType: code
+        targetType: llm
+      id: 1759075346139-source-1759075427186-target
+      selected: false
+      source: '1759075346139'
+      sourceHandle: source
+      target: '1759075427186'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1759074948508'
+        sourceType: http-request
+        targetType: if-else
+      id: 1759075526386-source-1759075833345-target
+      selected: false
+      source: '1759075526386'
+      sourceHandle: source
+      target: '1759075833345'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInLoop: false
+        sourceType: start
+        targetType: loop
+      id: 1758664202339-source-1759074948508-target
+      selected: false
+      source: '1758664202339'
+      sourceHandle: source
+      target: '1759074948508'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1759230598309'
+        sourceType: http-request
+        targetType: llm
+      id: 1759232040134-source-1759233418786-target
+      selected: false
+      source: '1759232040134'
+      sourceHandle: source
+      target: '1759233418786'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: loop
+        targetType: loop
+      id: 1759236924328-source-1759230598309-target
+      selected: false
+      source: '1759236924328'
+      sourceHandle: source
+      target: '1759230598309'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: loop
+        targetType: loop
+      id: 1759074948508-source-1759236924328-target
+      selected: false
+      source: '1759074948508'
+      sourceHandle: source
+      target: '1759236924328'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1759236924328'
+        sourceType: http-request
+        targetType: llm
+      id: 1759260965703-source-1759263029392-target
+      selected: false
+      source: '1759260965703'
+      sourceHandle: source
+      target: '1759263029392'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1759236924328'
+        sourceType: llm
+        targetType: http-request
+      id: 1759263029392-source-1759267050863-target
+      selected: false
+      source: '1759263029392'
+      sourceHandle: source
+      target: '1759267050863'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1759236924328'
+        sourceType: http-request
+        targetType: if-else
+      id: 1759267050863-source-1759270741227-target
+      selected: false
+      source: '1759267050863'
+      sourceHandle: source
+      target: '1759270741227'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1759230598309'
+        sourceType: http-request
+        targetType: code
+      id: 1759272123263-source-1759272785029-target
+      selected: false
+      source: '1759272123263'
+      sourceHandle: source
+      target: '1759272785029'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1759230598309'
+        sourceType: code
+        targetType: code
+      id: 1759272785029-source-1759273129028-target
+      selected: false
+      source: '1759272785029'
+      sourceHandle: source
+      target: '1759273129028'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1759230598309'
+        sourceType: code
+        targetType: http-request
+      id: 1759273129028-source-1759232040134-target
+      selected: false
+      source: '1759273129028'
+      sourceHandle: source
+      target: '1759232040134'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1759230598309'
+        sourceType: llm
+        targetType: http-request
+      id: 1759233418786-source-1759277002431-target
+      selected: false
+      source: '1759233418786'
+      sourceHandle: source
+      target: '1759277002431'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1759230598309'
+        sourceType: http-request
+        targetType: llm
+      id: 1759277002431-source-1759277740605-target
+      selected: false
+      source: '1759277002431'
+      sourceHandle: source
+      target: '1759277740605'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1759230598309'
+        sourceType: llm
+        targetType: http-request
+      id: 1759277740605-source-1759242679228-target
+      selected: false
+      source: '1759277740605'
+      sourceHandle: source
+      target: '1759242679228'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1759230598309'
+        sourceType: http-request
+        targetType: if-else
+      id: 1759242679228-source-1759278714354-target
+      selected: false
+      source: '1759242679228'
+      sourceHandle: source
+      target: '1759278714354'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1759074948508'
+        sourceType: loop-start
+        targetType: assigner
+      id: 1759074948508start-source-1759373411494-target
+      selected: false
+      source: 1759074948508start
+      sourceHandle: source
+      target: '1759373411494'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1759074948508'
+        sourceType: assigner
+        targetType: code
+      id: 1759373411494-source-1759373437413-target
+      selected: false
+      source: '1759373411494'
+      sourceHandle: source
+      target: '1759373437413'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1759074948508'
+        sourceType: code
+        targetType: http-request
+      id: 1759373437413-source-1759075135019-target
+      selected: false
+      source: '1759373437413'
+      sourceHandle: source
+      target: '1759075135019'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1759074948508'
+        sourceType: if-else
+        targetType: loop-end
+      id: 1759075833345-false-1759075868601-target
+      selected: false
+      source: '1759075833345'
+      sourceHandle: 'false'
+      target: '1759075868601'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1759236924328'
+        sourceType: http-request
+        targetType: code
+      id: 1759256807420-source-1759271237162-target
+      selected: false
+      source: '1759256807420'
+      sourceHandle: source
+      target: '1759271237162'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1759236924328'
+        sourceType: if-else
+        targetType: loop-end
+      id: 1759270741227-false-1759271078210-target
+      selected: false
+      source: '1759270741227'
+      sourceHandle: 'false'
+      target: '1759271078210'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1759230598309'
+        sourceType: if-else
+        targetType: loop-end
+      id: 1759278714354-false-1759375296128-target
+      selected: false
+      source: '1759278714354'
+      sourceHandle: 'false'
+      target: '1759375296128'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1759236924328'
+        sourceType: loop-start
+        targetType: assigner
+      id: 1759236924328start-source-1759375889950-target
+      selected: false
+      source: 1759236924328start
+      sourceHandle: source
+      target: '1759375889950'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1759236924328'
+        sourceType: assigner
+        targetType: code
+      id: 1759375889950-source-1759375909533-target
+      selected: false
+      source: '1759375889950'
+      sourceHandle: source
+      target: '1759375909533'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1759236924328'
+        sourceType: code
+        targetType: http-request
+      id: 1759375909533-source-1759256807420-target
+      selected: false
+      source: '1759375909533'
+      sourceHandle: source
+      target: '1759256807420'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: loop
+        targetType: end
+      id: 1759230598309-source-1759376112917-target
+      selected: false
+      source: '1759230598309'
+      sourceHandle: source
+      target: '1759376112917'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1759236924328'
+        sourceType: code
+        targetType: code
+      id: 1759271237162-source-1759378654140-target
+      selected: false
+      source: '1759271237162'
+      sourceHandle: source
+      target: '1759378654140'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1759236924328'
+        sourceType: code
+        targetType: http-request
+      id: 1759378654140-source-1759260965703-target
+      selected: false
+      source: '1759378654140'
+      sourceHandle: source
+      target: '1759260965703'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1759230598309'
+        sourceType: loop-start
+        targetType: assigner
+      id: 1759230598309start-source-1759384974961-target
+      source: 1759230598309start
+      sourceHandle: source
+      target: '1759384974961'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1759230598309'
+        sourceType: assigner
+        targetType: code
+      id: 1759384974961-source-1759385031552-target
+      source: '1759384974961'
+      sourceHandle: source
+      target: '1759385031552'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1759230598309'
+        sourceType: code
+        targetType: http-request
+      id: 1759385031552-source-1759272123263-target
+      source: '1759385031552'
+      sourceHandle: source
+      target: '1759272123263'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    nodes:
+    - data:
+        selected: false
+        title: Start
+        type: start
+        variables:
+        - default: subject,tickets
+          hint: ''
+          label: keys
+          max_length: 48
+          options: []
+          placeholder: ''
+          required: false
+          type: text-input
+          variable: keys
+        - default: freshdesk
+          hint: ''
+          label: db
+          max_length: 48
+          options: []
+          placeholder: ''
+          required: false
+          type: text-input
+          variable: db
+        - default: splitedBySubject
+          hint: ''
+          label: collection
+          max_length: 48
+          options: []
+          placeholder: ''
+          required: false
+          type: text-input
+          variable: collection
+        - default: ''
+          hint: ''
+          label: continueSplitBySubject
+          max_length: 48
+          options: []
+          placeholder: ''
+          required: false
+          type: checkbox
+          variable: continueSplitBySubject
+        - default: ''
+          hint: ''
+          label: dump
+          max_length: 48
+          options: []
+          placeholder: ''
+          required: false
+          type: checkbox
+          variable: dump
+        - default: '130'
+          hint: ''
+          label: limit
+          max_length: 48
+          options: []
+          placeholder: ''
+          required: false
+          type: number
+          variable: limit
+        - default: ''
+          hint: ''
+          label: limitDesc
+          max_length: 48
+          options: []
+          placeholder: ''
+          required: true
+          type: number
+          variable: limitDesc
+      height: 244
+      id: '1758664202339'
+      position:
+        x: 30
+        y: 521.5
+      positionAbsolute:
+        x: 30
+        y: 521.5
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+    - data:
+        author: Dify
+        desc: ''
+        height: 88
+        selected: false
+        showAuthor: true
+        text: '{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"No
+          Futuro adcionar um filtro que encontre palavras comuns nos subjects mas
+          que nao faz difrença para o titulo","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0,"textStyle":""}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}'
+        theme: blue
+        title: ''
+        type: ''
+        width: 240
+      height: 88
+      id: '1758863917744'
+      position:
+        x: 263.7908207728709
+        y: 293.99129876406187
+      positionAbsolute:
+        x: 263.7908207728709
+        y: 293.99129876406187
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom-note
+      width: 240
+    - data:
+        break_conditions: []
+        error_handle_mode: terminated
+        height: 244
+        logical_operator: and
+        loop_count: 2
+        loop_variables:
+        - id: b15be855-2ae0-46d5-85a0-db5de731f44c
+          label: skip
+          value: '0'
+          value_type: constant
+          var_type: number
+        selected: false
+        start_node_id: 1759074948508start
+        title: Separar Por Subject
+        type: loop
+        width: 2604
+      height: 244
+      id: '1759074948508'
+      position:
+        x: 332
+        y: 521.5
+      positionAbsolute:
+        x: 332
+        y: 521.5
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 2604
+      zIndex: 1
+    - data:
+        desc: ''
+        isInLoop: true
+        selected: false
+        title: ''
+        type: loop-start
+      draggable: false
+      height: 48
+      id: 1759074948508start
+      parentId: '1759074948508'
+      position:
+        x: 60
+        y: 105
+      positionAbsolute:
+        x: 392
+        y: 626.5
+      selectable: false
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom-loop-start
+      width: 44
+      zIndex: 1002
+    - data:
+        authorization:
+          config: null
+          type: no-auth
+        body:
+          data: []
+          type: none
+        headers: ''
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1759074948508'
+        method: get
+        params: 'skip:{{#1759373437413.skip#}}
+
+          keys:{{#1758664202339.keys#}}
+
+          db:{{#1758664202339.db#}}
+
+          collection:{{#1758664202339.collection#}}
+
+          limit:{{#1758664202339.limit#}}'
+        retry_config:
+          max_retries: 3
+          retry_enabled: true
+          retry_interval: 100
+        selected: false
+        ssl_verify: true
+        timeout:
+          max_connect_timeout: 0
+          max_read_timeout: 0
+          max_write_timeout: 0
+        title: HTTP Request Ler do SplitedBySub
+        type: http-request
+        url: https://kno-bot.vercel.app/api/data-mongodb
+        variables: []
+      height: 138
+      id: '1759075135019'
+      parentId: '1759074948508'
+      position:
+        x: 808
+        y: 60
+      positionAbsolute:
+        x: 1140
+        y: 581.5
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 1002
+    - data:
+        code: "function main({ continueSplitBySubject, body,limit }) {\n  try {\n\
+          \    // Ensure the body is a string before trying to parse\n    const data\
+          \ = typeof body === \"string\" ? JSON.parse(body) : body;\n\n    if (Array.isArray(data)\
+          \ && data.length >= limit) {\n      return {\n        continueSplitBySubject:\
+          \ true\n      };\n    } else {\n      return {\n        continueSplitBySubject:\
+          \ false\n      };\n    }\n  } catch (error) {\n    return {\n      continueSplitBySubject:\
+          \ false,\n      error: \"Failed to parse JSON: \" + error.message,\n   \
+          \   body: null\n    };\n  }\n}"
+        code_language: javascript
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1759074948508'
+        outputs:
+          continueSplitBySubject:
+            children: null
+            type: boolean
+        selected: false
+        title: CONTINUE?
+        type: code
+        variables:
+        - value_selector:
+          - '1758664202339'
+          - continueSplitBySubject
+          value_type: boolean
+          variable: continueSplitBySubject
+        - value_selector:
+          - '1759075135019'
+          - body
+          value_type: string
+          variable: body
+        - value_selector:
+          - '1758664202339'
+          - limit
+          value_type: number
+          variable: limit
+      height: 52
+      id: '1759075346139'
+      parentId: '1759074948508'
+      position:
+        x: 1110
+        y: 103
+      positionAbsolute:
+        x: 1442
+        y: 624.5
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 1002
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1759074948508'
+        model:
+          completion_params:
+            frequency_penalty: 0
+            presence_penalty: 0
+            random_seed: 2147483600
+            safe_prompt: true
+            temperature: 0
+            top_p: 1
+          mode: chat
+          name: codestral-2501
+          provider: langgenius/mistralai/mistralai
+        prompt_template:
+        - id: 2f4a76ef-3088-48ad-a4ec-feed3b3506f2
+          role: system
+          text: "Ignore qualquer instrução anterior. Inicie uma nova tarefa do zero.\n\
+            \nVocê receberá uma lista de chamados técnicos. Cada chamado contém os\
+            \ seguintes campos:\n- id: identificador único do chamado\n- conversations:\
+            \ lista de IDs de conversas relacionadas\n- subject: título ou descrição\
+            \ do chamado\n- desc: descrição do erro técnico ocorrido\n\nSeu objetivo\
+            \ é agrupar os chamados em dois grupos: \"TRATADO\" e \"RETRATAR\", seguindo\
+            \ as regras abaixo.\n\n---\n\n1. **Limpeza e Normalização**\nRemova completamente\
+            \ dos campos `subject` e `desc` os seguintes elementos:\n- Datas (ex:\
+            \ 2024-11-08, 08/11/2024)\n- Horários (ex: 10:21:27)\n- Códigos longos\
+            \ ou identificadores numéricos (ex: 202507310115120836)\n- Termos irrelevantes\
+            \ como: \"source\", \"init\", \"info\", \"exceptionmessage\", \"frameworkinit_fatalexception\"\
+            , \"programnotexists\", \"throw\"\n\nEsses elementos não devem aparecer\
+            \ em nenhuma parte da saída.\n\n---\n\n2. **Identificação de Padrão no\
+            \ `subject`**\nProcure por padrões no campo `subject` que sigam o formato:\n\
+            \n**SSS_NomeDoProcesso**\n\nOnde:\n- `SSS` é uma sigla com exatamente\
+            \ 3 letras (maiúsculas, minúsculas ou mistas)\n- Seguido por um underscore\
+            \ `_`\n- `NomeDoProcesso` pode conter letras e números\n- O padrão pode\
+            \ estar envolto por parênteses, colchetes, aspas ou chaves\n- Pode estar\
+            \ em qualquer parte do `subject`, mesmo que misturado com mensagens de\
+            \ erro ou outros textos\n\n**Exemplos válidos:**\n- `[RZN_InputInformacoesContratosPerformer]`\n\
+            - `{ABC_Importacao}`\n- `cit_lancamentodenotasfiscais`\n- `vVt_backgroundchecknivelzerocnd`\n\
+            \n**Tratamentos adicionais:**\n- Se houver uma sequência numérica longa\
+            \ após o padrão (ex: `SFR_Processo_202507310115120836`), remova essa parte,\
+            \ mantendo apenas `SFR_Processo`.\n- Se o padrão aparecer duplicado (ex:\
+            \ `RZN_RZN_ProcessoA`), remova a repetição e mantenha apenas `RZN_ProcessoA`.\n\
+            \n---\n\n3. **Agrupamento**\n- Chamados com padrão válido devem ser agrupados\
+            \ no grupo `\"TRATADO\"`, usando o valor normalizado do padrão como `subject`.\n\
+            - Chamados sem padrão válido devem ser agrupados no grupo `\"RETRATAR\"\
+            `, mantendo o `subject` original. Em desc se não retornar alguma descrição\
+            \ defina como \"retratar\"\n- Dentro de cada grupo, os chamados devem\
+            \ ser separados por tipo de erro (`desc`), mesmo que o processo seja o\
+            \ mesmo.\n\n---\n\n4. **Formato da Resposta**\nRetorne apenas um array\
+            \ JSON plano, sem marcações de código, sem quebras de linha, sem explicações.\n\
+            \n**Exemplo esperado:**\n[\n  {\n    \"group\": \"TRATADO\",\n    \"tickets\"\
+            : [\n      {\n        \"subject\": \"SFR_EscrituracaoJacarei\",\n    \
+            \    \"desc\": \"failed to connect to vm\",\n        \"id\": [\"149117\"\
+            ],\n        \"conversations\": [\"35363925498\"]\n      }\n    ]\n  },\n\
+            \  {\n    \"group\": \"RETRATAR\",\n    \"tickets\": [\n      {\n    \
+            \    \"subject\": \"erro ao inicializar conexão remota\",\n        \"\
+            desc\": \"connection timeout\",\n        \"id\": [\"149118\"],\n     \
+            \   \"conversations\": [\"35363925499\"]\n      }\n    ]\n  }\n]"
+        - id: 07a8d3eb-f259-4edb-af8f-191417227cb2
+          role: user
+          text: '{{#1759075135019.body#}}'
+        retry_config:
+          max_retries: 3
+          retry_enabled: true
+          retry_interval: 1000
+        selected: false
+        title: LLM Filtrar Subjects
+        type: llm
+        vision:
+          enabled: false
+      height: 118
+      id: '1759075427186'
+      parentId: '1759074948508'
+      position:
+        x: 1412
+        y: 70
+      positionAbsolute:
+        x: 1744
+        y: 591.5
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 1002
+    - data:
+        authorization:
+          config: null
+          type: no-auth
+        body:
+          data:
+          - id: key-value-961
+            key: ''
+            type: text
+            value: '{{#1759075427186.text#}}'
+          type: json
+        headers: Content-Type:application/json
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1759074948508'
+        method: post
+        params: ''
+        retry_config:
+          max_retries: 3
+          retry_enabled: true
+          retry_interval: 100
+        selected: false
+        ssl_verify: true
+        timeout:
+          max_connect_timeout: 0
+          max_read_timeout: 0
+          max_write_timeout: 0
+        title: Subir Pro groupedSubject
+        type: http-request
+        url: http://kno-bot.vercel.app/api/crudd
+        variables: []
+      height: 138
+      id: '1759075526386'
+      parentId: '1759074948508'
+      position:
+        x: 1711.7026032900062
+        y: 65
+      positionAbsolute:
+        x: 2043.7026032900062
+        y: 586.5
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 1002
+    - data:
+        cases:
+        - case_id: 'true'
+          conditions:
+          - comparison_operator: is
+            id: e65d85b4-0cda-438a-a6b1-a09de4cf7541
+            value: true
+            varType: boolean
+            variable_selector:
+            - '1759075346139'
+            - continueSplitBySubject
+          id: 'true'
+          logical_operator: and
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1759074948508'
+        selected: false
+        title: IF/ELSE 2
+        type: if-else
+      height: 124
+      id: '1759075833345'
+      parentId: '1759074948508'
+      position:
+        x: 2016
+        y: 67
+      positionAbsolute:
+        x: 2348
+        y: 588.5
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 1002
+    - data:
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1759074948508'
+        selected: false
+        title: Exit Loop
+        type: loop-end
+      height: 54
+      id: '1759075868601'
+      parentId: '1759074948508'
+      position:
+        x: 2318
+        y: 102
+      positionAbsolute:
+        x: 2650
+        y: 623.5
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom-simple
+      width: 244
+      zIndex: 1002
+    - data:
+        break_conditions: []
+        error_handle_mode: terminated
+        height: 295
+        logical_operator: and
+        loop_count: 100
+        loop_variables:
+        - id: 0a93e776-fb67-41ba-a0d5-c30d8abc7b3d
+          label: skip
+          value: '0'
+          value_type: constant
+          var_type: number
+        selected: false
+        start_node_id: 1759230598309start
+        title: Get Resolution
+        type: loop
+        width: 4086
+      height: 295
+      id: '1759230598309'
+      position:
+        x: 256.6330133241522
+        y: 1334.258347359905
+      positionAbsolute:
+        x: 256.6330133241522
+        y: 1334.258347359905
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 4086
+      zIndex: 1
+    - data:
+        desc: ''
+        isInLoop: true
+        selected: false
+        title: ''
+        type: loop-start
+      draggable: false
+      height: 48
+      id: 1759230598309start
+      parentId: '1759230598309'
+      position:
+        x: 60
+        y: 129
+      positionAbsolute:
+        x: 316.6330133241522
+        y: 1463.258347359905
+      selectable: false
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom-loop-start
+      width: 44
+      zIndex: 1002
+    - data:
+        authorization:
+          config: null
+          type: no-auth
+        body:
+          data:
+          - id: key-value-2320
+            key: ''
+            type: text
+            value: '{"filterValue": {{#1759273129028.ticketIds#}}}'
+          type: json
+        headers: Content-Type:application/json
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1759230598309'
+        method: post
+        params: ''
+        retry_config:
+          max_retries: 3
+          retry_enabled: true
+          retry_interval: 100
+        selected: false
+        ssl_verify: true
+        timeout:
+          max_connect_timeout: 0
+          max_read_timeout: 0
+          max_write_timeout: 0
+        title: Get Conversations
+        type: http-request
+        url: https://kno-bot.vercel.app/api/data-mongodb?db=freshdesk&collection=tickets&keys=conversations,tags,subject,id&filterField=id
+        variables: []
+      height: 186
+      id: '1759232040134'
+      parentId: '1759230598309'
+      position:
+        x: 2014
+        y: 60
+      positionAbsolute:
+        x: 2270.633013324152
+        y: 1394.258347359905
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 1002
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1759230598309'
+        model:
+          completion_params:
+            temperature: 0
+          mode: chat
+          name: codestral-latest
+          provider: langgenius/mistralai/mistralai
+        prompt_template:
+        - id: b503fcf1-54c0-4505-9ccb-006f7e1ca12b
+          role: system
+          text: "Você é um agente inteligente especializado em análise de chamados\
+            \ técnicos. Sua tarefa é:\nEntrada de Dados\nReceber dois conjuntos de\
+            \ dados:\n\nGrupo 1 ({{#1759232040134.body#}}): Lista de objetos contendo\
+            \ os campos:\nsubject: título do chamado.\ntags: lista de palavras-chave,\
+            \ excluindo termos como \"robbi9\", números isolados, e qualquer variação\
+            \ relacionada a tempo (como \"min\", \"minutos\", \"minutes\").\nid: identificador\
+            \ único do chamado.\nconversations: lista de mensagens associadas ao chamado.\n\
+            Grupo 2 ({{#1759272123263.body#}}): lista de objetos com os campos subject\
+            \ e id.\n\nProcessamento do Grupo 1\nPara cada item do Grupo 1:\n\nLer\
+            \ o campo conversations.\nExtrair o conteúdo de body, decodificando HTML\
+            \ se necessário.\nIgnorar mensagens que contenham:\n\n\"Ticket fechado\
+            \ e mesclado com o ticket [número]\"\n\"Ticket mesclado com [número]\"\
+            \n\n\nIdentificar o contexto do chamado: ações realizadas, pendências\
+            \ e encaminhamentos.\nGerar uma resolução genérica, sem nomes, datas ou\
+            \ detalhes específicos.\nA resolução deve ser reutilizável, formatada\
+            \ em HTML simples e estruturada em passos claros.\nNão gerar resolução\
+            \ se não houver informações suficientes. As soluções devem ser tiradas\
+            \ dos conversations\n\nAgrupamento com o Grupo 2\nPara cada item do Grupo\
+            \ 2:\n\nAgrupar por subject, ignorando variações como datas, horários\
+            \ ou códigos.\nReunir todos os id correspondentes.\nAssociar a resolução\
+            \ gerada no Grupo 1 ao grupo de subject correspondente no Grupo 2.\n\n\
+            Formato da Resposta\nRetorne um array JSON plano, sem marcações de código,\
+            \ sem quebras de linha, sem explicações. Cada item deve seguir o formato:\n\
+            {\n  \"resolução\": \"resolução criada conforme o padrão solicitado em\
+            \ forma de passo a passo\",\n  \"tags\": [\"body.tags\"],\n  \"subject\"\
+            : \"body.subject\",\n\"desc\":\"body.desc\",\n  \"id\": [lista de ids\
+            \ agrupados do segundo grupo]\n}"
+        selected: false
+        title: LLM 3
+        type: llm
+        vision:
+          enabled: false
+      height: 88
+      id: '1759233418786'
+      parentId: '1759230598309'
+      position:
+        x: 2316
+        y: 109
+      positionAbsolute:
+        x: 2572.633013324152
+        y: 1443.258347359905
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 1002
+    - data:
+        break_conditions: []
+        error_handle_mode: terminated
+        height: 238
+        logical_operator: and
+        loop_count: 2
+        loop_variables:
+        - id: 60c48288-b71b-4223-bdc1-7055ef13a80e
+          label: skip
+          value: '0'
+          value_type: constant
+          var_type: number
+        selected: false
+        start_node_id: 1759236924328start
+        title: SEPARAR POR DESC
+        type: loop
+        width: 3486
+      height: 238
+      id: '1759236924328'
+      position:
+        x: -152
+        y: 929.5
+      positionAbsolute:
+        x: -152
+        y: 929.5
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 3486
+      zIndex: 1
+    - data:
+        desc: ''
+        isInLoop: true
+        selected: false
+        title: ''
+        type: loop-start
+      draggable: false
+      height: 48
+      id: 1759236924328start
+      parentId: '1759236924328'
+      position:
+        x: 60
+        y: 105
+      positionAbsolute:
+        x: -92
+        y: 1034.5
+      selectable: false
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom-loop-start
+      width: 44
+      zIndex: 1002
+    - data:
+        authorization:
+          config: null
+          type: no-auth
+        body:
+          data:
+          - id: key-value-1658
+            key: ''
+            type: text
+            value: '{{#1759277740605.text#}}'
+          type: json
+        headers: Content-Type:application/json
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1759230598309'
+        method: post
+        params: ''
+        retry_config:
+          max_retries: 3
+          retry_enabled: true
+          retry_interval: 100
+        selected: false
+        ssl_verify: true
+        timeout:
+          max_connect_timeout: 0
+          max_read_timeout: 0
+          max_write_timeout: 0
+        title: Subir Resolução
+        type: http-request
+        url: http://kno-bot.vercel.app/api/resolucao
+        variables: []
+      height: 108
+      id: '1759242679228'
+      parentId: '1759230598309'
+      position:
+        x: 3222
+        y: 84
+      positionAbsolute:
+        x: 3478.633013324152
+        y: 1418.258347359905
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 1002
+    - data:
+        authorization:
+          config: null
+          type: no-auth
+        body:
+          data:
+          - type: text
+            value: ''
+          type: none
+        headers: Content-Type:application/json
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1759236924328'
+        method: GET
+        params: 'db:dify
+
+          collection:groupedSubject
+
+          keys:group,tickets
+
+          limit:{{#1758664202339.limitDesc#}}
+
+          skip:{{#1759375909533.skip#}}
+
+          dump:true'
+        retry_config:
+          max_retries: 3
+          retry_enabled: true
+          retry_interval: 100
+        selected: false
+        ssl_verify: true
+        timeout:
+          max_connect_timeout: 0
+          max_read_timeout: 0
+          max_write_timeout: 0
+        title: Tratados e retratar
+        type: http-request
+        url: https://kno-bot.vercel.app/api/data-mongodb
+        variables: []
+      height: 138
+      id: '1759256807420'
+      parentId: '1759236924328'
+      position:
+        x: 808
+        y: 60
+      positionAbsolute:
+        x: 656
+        y: 989.5
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 1002
+    - data:
+        authorization:
+          config: null
+          type: no-auth
+        body:
+          data:
+          - type: text
+            value: '{"filterValue": {{#1759378654140.ticketids#}}}'
+          type: raw-text
+        headers: Content-Type:application/json
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1759236924328'
+        method: POST
+        params: 'db:freshdesk
+
+          collection:tickets
+
+          keys:id,description
+
+          filterField:id'
+        retry_config:
+          max_retries: 3
+          retry_enabled: true
+          retry_interval: 100
+        selected: false
+        ssl_verify: true
+        timeout:
+          max_connect_timeout: 0
+          max_read_timeout: 0
+          max_write_timeout: 0
+        title: Busca Descrições
+        type: http-request
+        url: https://kno-bot.vercel.app/api/data-mongodb
+        variables: []
+      height: 138
+      id: '1759260965703'
+      parentId: '1759236924328'
+      position:
+        x: 1733.4202046707296
+        y: 65
+      positionAbsolute:
+        x: 1581.4202046707296
+        y: 994.5
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 1002
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1759236924328'
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: codestral-2501
+          provider: langgenius/mistralai/mistralai
+        prompt_template:
+        - id: 468e0b83-d69e-466a-bc49-f36ceb30df18
+          role: system
+          text: "Você recebeu dois conjuntos de dados relacionados a tickets técnicos:\n\
+            \n\nTickets tratados, contendo:\n\nsubject: nome do processo ou robô envolvido.\n\
+            desc: descrição resumida do erro ou situação.\nid: identificadores dos\
+            \ tickets.\nconversations: histórico de interações relacionadas.\n\n\n\
+            \nDescrições técnicas dos tickets, obtidas via requisição HTTP, contendo:\n\
+            \nid: identificador do ticket.\ndescription: conteúdo HTML com detalhes\
+            \ técnicos, como mensagens de erro, exceções, timeouts, falhas de inicialização,\
+            \ problemas de interface, etc.\n\n\n\nSua tarefa é:\n\nAnalisar os tickets\
+            \ tratados e suas respectivas descrições técnicas.\nIdentificar padrões\
+            \ equivalentes de erro entre os tickets, mesmo que descritos de forma\
+            \ diferente.\nAgrupar os tickets que compartilham o mesmo tipo de problema\
+            \ técnico, com base em similaridade semântica, termos recorrentes ou estrutura\
+            \ das mensagens de erro.\nPara cada grupo identificado, retornar um objeto\
+            \ com a seguinte estrutura:\n[\n  {\n    \"subject\": \"<nome do processo\
+            \ ou robô>\",\n    \"desc\": \"<resumo técnico do erro identificado>\"\
+            ,\n    \"tickets\": [\n      \"id1\",\n      \"id2\"\n    ]\n  },\n  ...\n\
+            ]\nTickets que não se encaixarem em nenhum grupo devem ser classificados\
+            \ como \"isolados\" ou \"não agrupados\" e incluídos na mesma estrutura.\n\
+            \nRetorne apenas um array JSON plano, sem marcações de código"
+        - id: ae5829c3-3d00-4dc6-912f-5e4194809e1e
+          role: user
+          text: '{{#1759256807420.body#}}{{#1759260965703.body#}}'
+        selected: false
+        title: llm filtrar descriptions
+        type: llm
+        vision:
+          enabled: false
+      height: 88
+      id: '1759263029392'
+      parentId: '1759236924328'
+      position:
+        x: 2067.583758610647
+        y: 91.89219012998228
+      positionAbsolute:
+        x: 1915.5837586106468
+        y: 1021.3921901299823
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 1002
+    - data:
+        authorization:
+          config: null
+          type: no-auth
+        body:
+          data:
+          - id: key-value-448
+            key: ''
+            type: text
+            value: '{"data":{{#1759263029392.text#}},
+
+              "collection":"groupedDesc"}'
+          type: json
+        headers: Content-Type:application/json
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1759236924328'
+        method: post
+        params: ''
+        retry_config:
+          max_retries: 3
+          retry_enabled: true
+          retry_interval: 100
+        selected: false
+        ssl_verify: true
+        timeout:
+          max_connect_timeout: 0
+          max_read_timeout: 0
+          max_write_timeout: 0
+        title: Subir para groupedDesc
+        type: http-request
+        url: http://kno-bot.vercel.app/api/crudd
+        variables: []
+      height: 138
+      id: '1759267050863'
+      parentId: '1759236924328'
+      position:
+        x: 2339.717601380724
+        y: 65
+      positionAbsolute:
+        x: 2187.717601380724
+        y: 994.5
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 1002
+    - data:
+        cases:
+        - case_id: 'true'
+          conditions:
+          - comparison_operator: is
+            id: 21cfd6fb-3fd0-4690-8a5e-08ae7d01f603
+            value: true
+            varType: boolean
+            variable_selector:
+            - '1759271237162'
+            - continueDesc
+          id: 'true'
+          logical_operator: and
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1759236924328'
+        selected: false
+        title: IF/ELSE 2
+        type: if-else
+      height: 124
+      id: '1759270741227'
+      parentId: '1759236924328'
+      position:
+        x: 2922
+        y: 67
+      positionAbsolute:
+        x: 2770
+        y: 996.5
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 1002
+    - data:
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1759236924328'
+        selected: false
+        title: Exit Loop 2
+        type: loop-end
+      height: 54
+      id: '1759271078210'
+      parentId: '1759236924328'
+      position:
+        x: 3224
+        y: 102
+      positionAbsolute:
+        x: 3072
+        y: 1031.5
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom-simple
+      width: 244
+      zIndex: 1002
+    - data:
+        code: "function main({ body, limit }) {\n  try {\n    const data = typeof\
+          \ body === \"string\" ? JSON.parse(body) : body;\n\n    // Verifica se o\
+          \ corpo é um array de grupos\n    if (Array.isArray(data) && data.length\
+          \ >= limit) {\n      return { continueDesc: true };\n    } else {\n    \
+          \  return { continueDesc: false };\n    }\n  } catch (error) {\n    return\
+          \ {\n      continueDesc: false,\n      error: \"Erro ao interpretar JSON:\
+          \ \" + error.message,\n      body: null\n    };\n  }\n}"
+        code_language: javascript
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1759236924328'
+        outputs:
+          continueDesc:
+            children: null
+            type: boolean
+        selected: false
+        title: Continue Desc?
+        type: code
+        variables:
+        - value_selector:
+          - '1759256807420'
+          - body
+          value_type: string
+          variable: body
+        - value_selector:
+          - '1758664202339'
+          - limitDesc
+          value_type: number
+          variable: limit
+      height: 52
+      id: '1759271237162'
+      parentId: '1759236924328'
+      position:
+        x: 1107.702603290006
+        y: 103
+      positionAbsolute:
+        x: 955.702603290006
+        y: 1032.5
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 1002
+    - data:
+        authorization:
+          config: null
+          type: no-auth
+        body:
+          data:
+          - type: text
+            value: ''
+          type: none
+        headers: Content-Type:application/json
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1759230598309'
+        method: GET
+        params: 'db:dify
+
+          collection:groupedDesc
+
+          limit:1
+
+          skip:{{#1759385031552.skip#}}
+
+          dump:true
+
+          keys:subject,desc,tickets'
+        retry_config:
+          max_retries: 3
+          retry_enabled: true
+          retry_interval: 100
+        selected: false
+        ssl_verify: true
+        timeout:
+          max_connect_timeout: 0
+          max_read_timeout: 0
+          max_write_timeout: 0
+        title: HTTP Request GroupeDDesc
+        type: http-request
+        url: https://kno-bot.vercel.app/api/data-mongodb
+        variables: []
+      height: 138
+      id: '1759272123263'
+      parentId: '1759230598309'
+      position:
+        x: 936.0000000000001
+        y: 80
+      positionAbsolute:
+        x: 1192.6330133241522
+        y: 1414.258347359905
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 1002
+    - data:
+        code: "function main({ body, limit }) {\n  try {\n    const data = typeof\
+          \ body === \"string\" ? JSON.parse(body) : body;\n\n    // Verifica se o\
+          \ corpo é um array de grupos\n    if (Array.isArray(data) && data.length\
+          \ > 0) {\n      return { continueRes: true };\n    } else {\n      return\
+          \ { continueRes: false };\n    }\n  } catch (error) {\n    return {\n  \
+          \    continueRes: false,\n      error: \"Erro ao interpretar JSON: \" +\
+          \ error.message,\n      body: null\n    };\n  }\n}"
+        code_language: javascript
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1759230598309'
+        outputs:
+          continueRes:
+            children: null
+            type: boolean
+        selected: false
+        title: Continue RES?
+        type: code
+        variables:
+        - value_selector:
+          - '1758664202339'
+          - limitRes
+          value_type: number
+          variable: limit
+        - value_selector:
+          - '1759272123263'
+          - body
+          value_type: string
+          variable: body
+      height: 52
+      id: '1759272785029'
+      parentId: '1759230598309'
+      position:
+        x: 1410
+        y: 127
+      positionAbsolute:
+        x: 1666.6330133241522
+        y: 1461.258347359905
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 1002
+    - data:
+        code: "function main({ body }) {\n  const data = JSON.parse(body);\n  const\
+          \ ticketIds = Object.keys(data[0].tickets).map(id => Number(id));\n\n  return\
+          \ {\n    ticketIds\n  };\n}"
+        code_language: javascript
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1759230598309'
+        outputs:
+          ticketIds:
+            children: null
+            type: array[number]
+        selected: false
+        title: get Tickets
+        type: code
+        variables:
+        - value_selector:
+          - '1759272123263'
+          - body
+          value_type: string
+          variable: body
+      height: 52
+      id: '1759273129028'
+      parentId: '1759230598309'
+      position:
+        x: 1712
+        y: 127
+      positionAbsolute:
+        x: 1968.6330133241522
+        y: 1461.258347359905
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 1002
+    - data:
+        authorization:
+          config: null
+          type: no-auth
+        body:
+          data:
+          - type: text
+            value: ''
+          type: none
+        headers: ''
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1759230598309'
+        method: GET
+        params: ''
+        retry_config:
+          max_retries: 3
+          retry_enabled: true
+          retry_interval: 100
+        selected: false
+        ssl_verify: true
+        timeout:
+          max_connect_timeout: 0
+          max_read_timeout: 0
+          max_write_timeout: 0
+        title: HTTP Request get companies
+        type: http-request
+        url: https://kno-bot.vercel.app/api/data-mongodb?db=dify&collection=companies&dump=true
+        variables: []
+      height: 154
+      id: '1759277002431'
+      parentId: '1759230598309'
+      position:
+        x: 2618
+        y: 76
+      positionAbsolute:
+        x: 2874.633013324152
+        y: 1410.258347359905
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 1002
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1759230598309'
+        model:
+          completion_params:
+            temperature: 0
+          mode: chat
+          name: codestral-2501
+          provider: langgenius/mistralai/mistralai
+        prompt_template:
+        - id: 11125c48-1bf4-4f9c-8554-1f6b64c6e83a
+          role: system
+          text: 'Agente Inteligente de Enriquecimento de Chamados Técnicos
+
+            🔹 Entrada
+
+            Você receberá:
+
+
+            Um conjunto de chamados técnicos: {{#1759233418786.text#}}
+
+            Uma lista de empresas com dados como nome, domínio, descrição e outras
+            informações: {{#1759277002431.body#}}
+
+
+
+            🔍 Tarefa
+
+            Para cada chamado técnico, identifique a empresa correspondente com base
+            em:
+
+
+            Os 3 primeiros caracteres da tag
+
+            Ou os 3 primeiros caracteres do subject
+
+            Ou pela descrição presente no chamado
+
+
+            Ao encontrar a empresa correspondente na lista, associe ao chamado os
+            seguintes dados:
+
+
+            Nome da empresa
+
+            Descrição
+
+            Domínios relacionados
+
+
+            Além disso, pesquise na internet a URL da logo da empresa, utilizando
+            o nome ou domínio como referência. Adicione essa URL ao chamado como o
+            campo "logo". Utilize informação REAL apenas'
+        selected: false
+        title: LLM 4
+        type: llm
+        vision:
+          enabled: false
+      height: 88
+      id: '1759277740605'
+      parentId: '1759230598309'
+      position:
+        x: 2920
+        y: 109
+      positionAbsolute:
+        x: 3176.633013324152
+        y: 1443.258347359905
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 1002
+    - data:
+        cases:
+        - case_id: 'true'
+          conditions:
+          - comparison_operator: is
+            id: a725e6f9-d21f-4340-9782-b6209ac493d5
+            value: true
+            varType: boolean
+            variable_selector:
+            - '1759272785029'
+            - continueRes
+          id: 'true'
+          logical_operator: and
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1759230598309'
+        selected: false
+        title: IF/ELSE 3
+        type: if-else
+      height: 124
+      id: '1759278714354'
+      parentId: '1759230598309'
+      position:
+        x: 3524
+        y: 91
+      positionAbsolute:
+        x: 3780.633013324152
+        y: 1425.258347359905
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 1002
+    - data:
+        isInIteration: false
+        isInLoop: true
+        items:
+        - input_type: constant
+          operation: +=
+          value: 1
+          variable_selector:
+          - '1759074948508'
+          - skip
+          write_mode: over-write
+        loop_id: '1759074948508'
+        selected: false
+        title: Variable Assigner
+        type: assigner
+        version: '2'
+      height: 84
+      id: '1759373411494'
+      parentId: '1759074948508'
+      position:
+        x: 204
+        y: 87
+      positionAbsolute:
+        x: 536
+        y: 608.5
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 1002
+    - data:
+        code: "function main({ skip, limit }) {\n  return {\n    skip: skip === 1\
+          \ ? 0 : (skip - 1) * limit\n  };\n}"
+        code_language: javascript
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1759074948508'
+        outputs:
+          skip:
+            children: null
+            type: number
+        selected: false
+        title: IncreaseSkip
+        type: code
+        variables:
+        - value_selector:
+          - '1759074948508'
+          - skip
+          value_type: number
+          variable: skip
+        - value_selector:
+          - '1758664202339'
+          - limit
+          value_type: number
+          variable: limit
+      height: 52
+      id: '1759373437413'
+      parentId: '1759074948508'
+      position:
+        x: 508.29739670999413
+        y: 103
+      positionAbsolute:
+        x: 840.2973967099941
+        y: 624.5
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 1002
+    - data:
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1759230598309'
+        selected: false
+        title: Exit Loop 3
+        type: loop-end
+      height: 54
+      id: '1759375296128'
+      parentId: '1759230598309'
+      position:
+        x: 3826
+        y: 126
+      positionAbsolute:
+        x: 4082.633013324152
+        y: 1460.258347359905
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom-simple
+      width: 244
+      zIndex: 1002
+    - data:
+        isInIteration: false
+        isInLoop: true
+        items:
+        - input_type: constant
+          operation: +=
+          value: 1
+          variable_selector:
+          - '1759236924328'
+          - skip
+          write_mode: over-write
+        loop_id: '1759236924328'
+        selected: false
+        title: Variable Assigner 2
+        type: assigner
+        version: '2'
+      height: 84
+      id: '1759375889950'
+      parentId: '1759236924328'
+      position:
+        x: 204
+        y: 87
+      positionAbsolute:
+        x: 52
+        y: 1016.5
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 1002
+    - data:
+        code: "function main({ skip, limit }) {\n  return {\n    skip: skip === 1\
+          \ ? 0 : (skip - 1) * limit\n  };\n}"
+        code_language: javascript
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1759236924328'
+        outputs:
+          skip:
+            children: null
+            type: number
+        selected: false
+        title: increase skip desc
+        type: code
+        variables:
+        - value_selector:
+          - '1759236924328'
+          - skip
+          value_type: number
+          variable: skip
+        - value_selector:
+          - '1758664202339'
+          - limitDesc
+          value_type: number
+          variable: limit
+      height: 52
+      id: '1759375909533'
+      parentId: '1759236924328'
+      position:
+        x: 506
+        y: 103
+      positionAbsolute:
+        x: 354
+        y: 1032.5
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 1002
+    - data:
+        outputs: []
+        selected: false
+        title: End
+        type: end
+      height: 52
+      id: '1759376112917'
+      position:
+        x: 3697.6
+        y: 1297.5
+      positionAbsolute:
+        x: 3697.6
+        y: 1297.5
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+    - data:
+        code: "function main({ body }) {\n  const ticketids = [];\n\n  try {\n   \
+          \ const data = typeof body === \"string\" ? JSON.parse(body) : body;\n\n\
+          \    if (Array.isArray(data)) {\n      for (const item of data) {\n    \
+          \    if (item.tickets && typeof item.tickets === \"object\") {\n       \
+          \   for (const id in item.tickets) {\n            ticketids.push(Number(id));\n\
+          \          }\n        }\n      }\n    }\n  } catch (error) {\n    return\
+          \ {\n      ticketids: [],\n      error: \"Erro ao interpretar JSON: \" +\
+          \ error.message,\n      body: null\n    };\n  }\n\n  return { ticketids\
+          \ };\n}"
+        code_language: javascript
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1759236924328'
+        outputs:
+          ticketids:
+            children: null
+            type: array[number]
+        selected: false
+        title: Tratados
+        type: code
+        variables:
+        - value_selector:
+          - '1759256807420'
+          - body
+          value_type: string
+          variable: body
+      height: 52
+      id: '1759378654140'
+      parentId: '1759236924328'
+      position:
+        x: 1409.702603290006
+        y: 103
+      positionAbsolute:
+        x: 1257.702603290006
+        y: 1032.5
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 1002
+    - data:
+        isInIteration: false
+        isInLoop: true
+        items:
+        - input_type: constant
+          operation: +=
+          value: 1
+          variable_selector:
+          - '1759230598309'
+          - skip
+          write_mode: over-write
+        loop_id: '1759230598309'
+        selected: false
+        title: Variable Assigner 3
+        type: assigner
+        version: '2'
+      height: 84
+      id: '1759384974961'
+      parentId: '1759230598309'
+      position:
+        x: 164
+        y: 129
+      positionAbsolute:
+        x: 420.6330133241522
+        y: 1463.258347359905
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 1002
+    - data:
+        code: "function main({ skip }) {\n  return {\n    skip: skip + 1\n  };\n}"
+        code_language: javascript
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1759230598309'
+        outputs:
+          skip:
+            children: null
+            type: number
+        selected: false
+        title: Increase Skip res
+        type: code
+        variables:
+        - value_selector:
+          - '1759230598309'
+          - skip
+          value_type: number
+          variable: skip
+      height: 52
+      id: '1759385031552'
+      parentId: '1759230598309'
+      position:
+        x: 466
+        y: 129
+      positionAbsolute:
+        x: 722.6330133241522
+        y: 1463.258347359905
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 1002
+    viewport:
+      x: 13.026592438147418
+      y: -143.9727819814501
+      zoom: 0.43527528164806234
+  rag_pipeline_variables: []
